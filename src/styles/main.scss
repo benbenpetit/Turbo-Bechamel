@@ -1,3 +1,5 @@
+@import './components/rape';
+
 *,
 *::before,
 *::after {
@@ -10,4 +12,26 @@ body {
   line-height: 1.5;
   color: #fff;
   background-color: #111;
+}
+
+.progress-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  width: 70vw;
+  max-width: 600px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 4px solid #fff;
+  background-color: #252525;
+  overflow: hidden;
+
+  > span {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: block;
+    transform-origin: left;
+  }
 }

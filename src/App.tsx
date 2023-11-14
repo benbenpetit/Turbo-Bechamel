@@ -1,7 +1,9 @@
+import Rape from '@/components/Kitchen/Rape'
+
 const App = () => {
   return (
     <>
-      <span>Allo</span>
+      <Rape />
     </>
   )
 }
