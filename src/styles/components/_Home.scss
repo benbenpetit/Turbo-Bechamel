@@ -1,0 +1,116 @@
+.Homepage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 70;
+  color: aqua;
+  border: solid 5px green;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  .background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .race-line {
+      background-color: #ffffff;
+      opacity: 1;
+      background-image: repeating-linear-gradient(
+          45deg,
+          #000000 25%,
+          transparent 25%,
+          transparent 75%,
+          #000000 75%,
+          #000000
+        ),
+        repeating-linear-gradient(
+          45deg,
+          #000000 25%,
+          #ffffff 25%,
+          #ffffff 75%,
+          #000000 75%,
+          #000000
+        );
+      background-position: 0 0, 20px 20px;
+      background-size: 40px 40px;
+      height: 15%;
+    }
+
+    .gradient {
+      height: 90%;
+      background: -webkit-linear-gradient(
+        #ffed47 0%,
+        #ff8f0c 70%,
+        #ff3e13 100%
+      );
+    }
+  }
+
+  .logo {
+    position: absolute;
+    display: flex;
+    max-height: 100%;
+    max-width: 100%;
+    // top: -8vh;
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .menu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+    row-gap: 10px;
+    bottom: 15vh;
+
+    .loading {
+      position: relative;
+      max-width: 30vw;
+
+      img {
+        top: 0;
+        left: 0;
+        height: 50px;
+        // max-height: 100%;
+        max-width: 100%;
+      }
+
+      .progress {
+        position: absolute;
+        top: 30%;
+        left: 3%;
+        background-color: #ffed47;
+        height: 16px;
+        // width: 400px;
+        width: 0px;
+      }
+    }
+
+    .text {
+      font-family: "VT323";
+      color: black;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+    }
+
+    .blink {
+      animation: blinker 2s linear infinite;
+    }
+
+    @keyframes blinker {
+      50% {
+        opacity: 0;
+      }
+    }
+  }
+}
