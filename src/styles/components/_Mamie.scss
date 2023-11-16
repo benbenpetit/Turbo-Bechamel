@@ -1,0 +1,53 @@
+.container-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
+//   border : solid 2px blue;
+  height: 50%;
+  width: 100%;
+
+  .modal {
+    height: 100%;
+    width: 100%;
+    // border : solid 2px red;
+    display: flex;
+    background: linear-gradient(#000000 10%, rgba(255,255,255,0) 120%);
+    backdrop-filter: blur(10px);
+    img {
+
+    }
+
+    .modal-text {
+        // border : solid 2px green;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10vh 10vh;
+
+      .modal-text-title{
+        h1 {
+            font-family: 'Swipe-Race';
+            font-size: 2.5rem;
+            background: -webkit-linear-gradient(#FF0000, #FF8A00, #FFF500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke-width: 3px;
+            -webkit-text-stroke-color: black;
+            paint-order: stroke fill;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+      }
+
+      .modal-text-content {
+        font-family: 'VT323';
+        font-size: 2.5vw;
+        padding: 10px 30px;
+        line-height: 1.5;
+      }
+    }
+  }
+}

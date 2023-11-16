@@ -1,3 +1,9 @@
+import { AnimatePresence } from "framer-motion"
+import EcraseTomate from "./components/Kitchen/EcraseTomate"
+import Foodtruck from "./components/Kitchen/Foodtruck"
+import Marmite from "./components/Kitchen/Marmite"
+import Mamie from "./components/Modal/Mamie"
+import Map from "./components/UI/Map"
 import { createRef, useEffect, useRef, useState } from 'react'
 import Kitchen from '@/assets/img/kitchen.jpg'
 // import Rape from '@/components/Kitchen/Rape'
@@ -10,6 +16,7 @@ import Kitchen from '@/assets/img/kitchen.jpg'
 // import Tomate from '@/components/Kitchen/Tomates/Tomate'
 
 const App = () => {
+  let [isModalOpen, setIsModalOpen] = useState(true)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
@@ -379,6 +386,8 @@ const App = () => {
         </div>
       </div>
       <div ref={screenSecondRef} className='screen second'></div>
+      <AnimatePresence>{isModalOpen && <Mamie/>}</AnimatePresence>
+      <Map/>
       <img className='background' src={Kitchen} alt='Cusine' />
     </main>
   )

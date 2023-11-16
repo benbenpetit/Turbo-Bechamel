@@ -1,3 +1,18 @@
+@font-face {
+  font-family: 'VT323';
+  src: url('src/assets/fonts/VT323-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Swipe-Race';
+  src: url('src/assets/fonts/SwipeRaceDemo.ttf') format('truetype');
+}
+
+@import "./components/Marmite.scss";
+@import "./components/EcraseTomate.scss";
+@import "./components/Foodtruck.scss";
+@import "./components/Mamie.scss";
+@import "./components/Map.scss";
 @import './components/rape';
 @import './components/couteau';
 @import './components/drag-item';
