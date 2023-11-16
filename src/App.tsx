@@ -1,11 +1,12 @@
-import { AnimatePresence } from "framer-motion"
-import EcraseTomate from "./components/Kitchen/EcraseTomate"
-import Foodtruck from "./components/Kitchen/Foodtruck"
-import Marmite from "./components/Kitchen/Marmite"
-import Mamie from "./components/Modal/Mamie"
-import Map from "./components/UI/Map"
-import { createRef, useEffect, useRef, useState } from 'react'
-import Kitchen from '@/assets/img/kitchen.jpg'
+import { AnimatePresence } from 'framer-motion'
+import EcraseTomate from './components/Kitchen/EcraseTomate'
+import Foodtruck from './components/Kitchen/Foodtruck'
+import Marmite from './components/Kitchen/Marmite'
+import Mamie from './components/Modal/Mamie'
+import Map from './components/UI/Map'
+import { CSSProperties, createRef, useEffect, useRef, useState } from 'react'
+import CuisineImg from '@/assets/img/cuisine.png'
+import { WindowSizeContext } from '@/contexts/WindowSize'
 // import Rape from '@/components/Kitchen/Rape'
 // import Couteau from '@/components/Kitchen/Couteau'
 // import DragItem from '@/components/DragItem'
@@ -16,7 +17,7 @@ import Kitchen from '@/assets/img/kitchen.jpg'
 // import Tomate from '@/components/Kitchen/Tomates/Tomate'
 
 const App = () => {
-  let [isModalOpen, setIsModalOpen] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
@@ -325,70 +326,83 @@ const App = () => {
   return (
     <main
       onMouseMove={handleMouseMove}
-      style={{
-        width: windowDimensions.width,
-        height: windowDimensions.height,
-        left: windowDimensions.left,
-        top: windowDimensions.top
-      }}
+      style={Object.assign(
+        {
+          width: windowDimensions.width,
+          height: windowDimensions.height,
+          left: windowDimensions.left,
+          top: windowDimensions.top
+        },
+        {
+          '--vw': windowDimensions.width / 100,
+          '--vh': windowDimensions.height / 100
+        } as CSSProperties
+      )}
     >
-      <div ref={screenFirstRef} className='screen first'>
-        <div
-          className='plat'
-          style={{
-            top: lasagnaPlatePosition.y,
-            left: lasagnaPlatePosition.x,
-            width: `${lasagnaPlateSize.width}px`,
-            height: `${lasagnaPlateSize.height}px`
-          }}
-          ref={lasagnaPlateRef}
-        >
-          lasagnaPlateRef
+      <WindowSizeContext.Provider
+        value={{
+          width: windowDimensions.width,
+          height: windowDimensions.height
+        }}
+      >
+        <div ref={screenFirstRef} className='screen first'>
+          <div
+            className='plat'
+            style={{
+              top: lasagnaPlatePosition.y,
+              left: lasagnaPlatePosition.x,
+              width: `${lasagnaPlateSize.width}px`,
+              height: `${lasagnaPlateSize.height}px`
+            }}
+            ref={lasagnaPlateRef}
+          >
+            lasagnaPlateRef
+          </div>
+          <div
+            className='planche'
+            style={{
+              top: cuttingPlatePosition.y,
+              left: cuttingPlatePosition.x,
+              width: `${cuttingPlateSize.width}px`,
+              height: `${cuttingPlateSize.height}px`
+            }}
+            ref={cuttingPlateRef}
+          >
+            cuttingPlateRef
+          </div>
+          <div className='reserves' style={{ position: 'absolute', zIndex: 3 }}>
+            {reserves.map((item) => {
+              switch (item.type) {
+                case 'tomato':
+                case 'onion':
+                case 'cheese':
+                  return renderReserve(item)
+                default:
+                  return null
+              }
+            })}
+          </div>
+          <div
+            className='ingredients'
+            style={{ position: 'absolute', zIndex: 4 }}
+          >
+            {ingredients.map((item) => {
+              switch (item.type) {
+                case 'tomato':
+                case 'onion':
+                case 'cheese':
+                  return renderIngredient(item)
+                default:
+                  return null
+              }
+            })}
+          </div>
         </div>
-        <div
-          className='planche'
-          style={{
-            top: cuttingPlatePosition.y,
-            left: cuttingPlatePosition.x,
-            width: `${cuttingPlateSize.width}px`,
-            height: `${cuttingPlateSize.height}px`
-          }}
-          ref={cuttingPlateRef}
-        >
-          cuttingPlateRef
-        </div>
-        <div className='reserves' style={{ position: 'absolute', zIndex: 3 }}>
-          {reserves.map((item) => {
-            switch (item.type) {
-              case 'tomato':
-              case 'onion':
-              case 'cheese':
-                return renderReserve(item)
-              default:
-                return null
-            }
-          })}
-        </div>
-        <div
-          className='ingredients'
-          style={{ position: 'absolute', zIndex: 4 }}
-        >
-          {ingredients.map((item) => {
-            switch (item.type) {
-              case 'tomato':
-              case 'onion':
-              case 'cheese':
-                return renderIngredient(item)
-              default:
-                return null
-            }
-          })}
-        </div>
-      </div>
-      <div ref={screenSecondRef} className='screen second'></div>
-      <AnimatePresence>{isModalOpen && <Mamie/>}</AnimatePresence>
-      <Map/>
-      <img className='background' src={Kitchen} alt='Cusine' />
+        <div ref={screenSecondRef} className='screen second'></div>
+        <AnimatePresence>{isModalOpen && <Mamie />}</AnimatePresence>
+        <Map />
+        <img className='background' src={CuisineImg} alt='Cusine' />
+      </WindowSizeContext.Provider>
     </main>
   )
 }
