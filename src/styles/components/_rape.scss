@@ -1,0 +1,29 @@
+.rape {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 500px;
+
+  .grater {
+    position: absolute;
+    z-index: 1;
+    height: 400px;
+    width: 100%;
+    top: 0;
+    left: 60px;
+    object-fit: contain;
+    cursor: grab;
+  }
+
+  .plate {
+    position: absolute;
+    z-index: 0;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    object-fit: contain;
+  }
+}

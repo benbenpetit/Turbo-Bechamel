@@ -1,9 +1,3 @@
-@import "./components/Marmite.scss";
-@import "./components/EcraseTomate.scss";
-@import "./components/Foodtruck.scss";
-@import "./components/Mamie.scss";
-@import "./components/Map.scss";
-
 @font-face {
   font-family: 'VT323';
   src: url('src/assets/fonts/VT323-Regular.ttf') format('truetype');
@@ -14,10 +8,28 @@
   src: url('src/assets/fonts/SwipeRaceDemo.ttf') format('truetype');
 }
 
+@import "./components/Marmite.scss";
+@import "./components/EcraseTomate.scss";
+@import "./components/Foodtruck.scss";
+@import "./components/Mamie.scss";
+@import "./components/Map.scss";
+@import './components/rape';
+@import './components/couteau';
+@import './components/drag-item';
+@import './components/planche';
+@import './components/plat';
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 body {
@@ -25,5 +37,64 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: #fff;
-  // background-color: #111;
+  background-color: #121212;
+  overflow: hidden;
+}
+
+main {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 16px;
+
+  .screen {
+    position: absolute;
+    height: 100vh;
+
+    &:nth-child(1) {
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    &:nth-of-type(2) {
+      top: 100vh;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: -1;
+  }
+}
+
+.progress-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  width: 70vw;
+  max-width: 600px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 4px solid #fff;
+  background-color: #252525;
+  overflow: hidden;
+
+  > span {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: block;
+    transform-origin: left;
+  }
 }
