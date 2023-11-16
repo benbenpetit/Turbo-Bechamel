@@ -1,3 +1,19 @@
+@import "./components/Marmite.scss";
+@import "./components/EcraseTomate.scss";
+@import "./components/Foodtruck.scss";
+@import "./components/Mamie.scss";
+@import "./components/Map.scss";
+
+@font-face {
+  font-family: 'VT323';
+  src: url('src/assets/fonts/VT323-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Swipe-Race';
+  src: url('src/assets/fonts/SwipeRaceDemo.ttf') format('truetype');
+}
+
 *,
 *::before,
 *::after {
@@ -9,5 +25,5 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: #fff;
-  background-color: #111;
+  // background-color: #111;
 }

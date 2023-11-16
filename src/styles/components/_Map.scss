@@ -1,0 +1,32 @@
+.container-map {
+  .background-map {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 20vh;
+    width: 100vw;
+    background-image: url("src/assets/img/background1.png");
+    // background-size: cover;
+    background-position: bottom;
+    overflow: hidden;
+    border: solid 2px black;
+  }
+
+  .voitures {
+    .voiture-mamie {
+      position: absolute;
+      bottom: 20px;
+      img {
+        height: 50px;
+      }
+    }
+
+    .voiture-diesel {
+      position: absolute;
+      bottom: 20px;
+      img {
+        height: 70px;
+      }
+    }
+  }
+}
