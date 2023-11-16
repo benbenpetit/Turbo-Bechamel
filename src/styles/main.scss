@@ -1,9 +1,20 @@
 @import './components/rape';
+@import './components/couteau';
+@import './components/drag-item';
+@import './components/planche';
+@import './components/plat';
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 body {
@@ -11,12 +22,14 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: #fff;
-  background-color: #111;
+  background-color: #121212;
+  overflow: hidden;
 }
 
 main {
-  position: relative;
-  height: 200vh;
+  position: absolute;
+  overflow: hidden;
+  border-radius: 16px;
 
   .screen {
     position: absolute;
