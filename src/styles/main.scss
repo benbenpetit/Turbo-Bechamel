@@ -8,11 +8,11 @@
   src: url('src/assets/fonts/SwipeRaceDemo.ttf') format('truetype');
 }
 
-@import "./components/Marmite.scss";
-@import "./components/EcraseTomate.scss";
-@import "./components/Foodtruck.scss";
-@import "./components/Mamie.scss";
-@import "./components/Map.scss";
+@import './components/Marmite.scss';
+@import './components/EcraseTomate.scss';
+@import './components/Foodtruck.scss';
+@import './components/Mamie.scss';
+@import './components/Map.scss';
 @import './components/rape';
 @import './components/couteau';
 @import './components/drag-item';
@@ -63,6 +63,27 @@ main {
     }
   }
 
+  .inside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: calc(100 * var(--vw));
+    height: calc(100 * var(--vh));
+    overflow: hidden;
+
+    .inside-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: calc(145 * var(--vw));
+      height: 100%;
+    }
+  }
+
   .background {
     position: absolute;
     top: 0;
@@ -71,8 +92,8 @@ main {
     right: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center;
+    object-fit: contain;
+    object-position: top left;
     z-index: -1;
   }
 }

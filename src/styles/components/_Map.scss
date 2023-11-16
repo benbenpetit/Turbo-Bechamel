@@ -4,7 +4,7 @@
     bottom: 0;
     left: 0;
     height: calc(16 * var(--vh));
-    width: 100vw;
+    width: calc(100 * var(--vw));
     background-image: url('src/assets/img/ville.png');
     background-position: bottom;
     overflow: hidden;
@@ -14,17 +14,17 @@
   .voitures {
     .voiture-mamie {
       position: absolute;
-      bottom: 20px;
+      bottom: calc(5 * var(--vh));
       img {
-        height: 50px;
+        height: calc(7 * var(--vh));
       }
     }
 
     .voiture-diesel {
       position: absolute;
-      bottom: 20px;
+      bottom: calc(5 * var(--vh));
       img {
-        height: 70px;
+        height: calc(10 * var(--vh));
       }
     }
   }

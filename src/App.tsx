@@ -6,7 +6,10 @@ import Mamie from './components/Modal/Mamie'
 import Map from './components/UI/Map'
 import { CSSProperties, createRef, useEffect, useRef, useState } from 'react'
 import CuisineImg from '@/assets/img/cuisine.png'
+import PlancheImg from '@/assets/img/planche.png'
 import { WindowSizeContext } from '@/contexts/WindowSize'
+import gsap from 'gsap'
+import { ScrollToPlugin } from 'gsap/all'
 // import Rape from '@/components/Kitchen/Rape'
 // import Couteau from '@/components/Kitchen/Couteau'
 // import DragItem from '@/components/DragItem'
@@ -16,8 +19,34 @@ import { WindowSizeContext } from '@/contexts/WindowSize'
 // import Plat from '@/components/Kitchen/Plat'
 // import Tomate from '@/components/Kitchen/Tomates/Tomate'
 
+gsap.registerPlugin(ScrollToPlugin)
+
+type TypeReserve = {
+  id: number
+  type: string
+  position: { x: number; y: number }
+  positionPercent: { x: number; y: number }
+  size: { width: number; height: number }
+  widthPercent: number
+}
+
+type TypeIngredient = {
+  id: number
+  type: string
+  position: { x: number; y: number }
+  positionPercent: { x: number; y: number }
+  size: { width: number; height: number }
+  widthPercent: number
+  isCut: boolean
+  cutIndex: number
+  isDragged: boolean
+}
+
 const App = () => {
+  const mainRef = useRef<HTMLElement>(null)
+  const insideRef = useRef<HTMLDivElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isRight, setIsRight] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
@@ -25,61 +54,57 @@ const App = () => {
     left: 0,
     top: 0
   })
-  const screenFirstRef = useRef<HTMLDivElement>(null)
-  const screenSecondRef = useRef<HTMLDivElement>(null)
-
-  const lasagnaPlateRef = useRef<HTMLDivElement>(null)
-  const [lasagnaPlateSize] = useState({
-    width: 200,
-    height: 200
-  })
-  const [lasagnaPlatePosition] = useState({
-    x: 500 - lasagnaPlateSize.width / 2,
-    y: 200 - lasagnaPlateSize.height / 2
-  })
 
   const cuttingPlateRef = useRef<HTMLDivElement>(null)
-  const [cuttingPlateSize, setCuttingPlateSize] = useState({
-    width: 100,
-    height: 100
-  })
-  const [cuttingPlatePosition] = useState({
-    x: 500 - cuttingPlateSize.width / 2,
-    y: 100 - cuttingPlateSize.height / 2
+  const [cuttingPlatePosition, setCuttingPlatePosition] = useState({
+    position: { x: 0, y: 0 },
+    positionPercent: { x: 44, y: 42 },
+    size: { width: 0, height: 0 },
+    widthPercent: 22
   })
 
-  type TypeReserve = {
-    id: number
-    type: string
-    position: { x: number; y: number }
-    size: { width: number; height: number }
-    widthPercent: number
-  }
+  const lasagnaPlateRef = useRef<HTMLDivElement>(null)
+  const [lasagnaPlatePosition, setLasagnaPlatePosition] = useState({
+    position: { x: 0, y: 0 },
+    positionPercent: { x: 70, y: 42 },
+    size: { width: 0, height: 0 },
+    widthPercent: 24
+  })
+
+  const [cuttingPlateIngredientId, setCuttingPlateIngredientId] = useState<
+    number | null
+  >(null)
+
+  const [lasagnaIngredients, setLasagnaIngredients] = useState<
+    TypeIngredient[]
+  >([])
 
   const [reserves, setReserves] = useState<TypeReserve[]>([
     {
-      id: 4,
-      type: 'tomato',
-      position: { x: 50, y: 400 },
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'tomate',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 21, y: 30 },
       size: { width: 0, height: 0 },
-      widthPercent: 10
+      widthPercent: 14
     },
     {
-      id: 5,
-      type: 'onion',
-      position: { x: 150, y: 400 },
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'oignon',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 2, y: 32 },
       size: { width: 0, height: 0 },
-      widthPercent: 5
+      widthPercent: 12
+    },
+    {
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'ail',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 10, y: 39 },
+      size: { width: 0, height: 0 },
+      widthPercent: 16
     }
   ])
-
-  type TypeIngredient = {
-    id: number
-    type: string
-    position: { x: number; y: number }
-    isCut: boolean
-    isDragged: boolean
-  }
 
   const [ingredients, setIngredients] = useState<TypeIngredient[]>([])
 
@@ -105,23 +130,44 @@ const App = () => {
   }
 
   const handleReserveClick = (id: number, type: string) => {
-    const reserveRect = reservesRefs.current[id].current.getBoundingClientRect()
+    const reserve = reserves.find((reserve) => reserve.id === id)!
+    if (!reserve) return
+
     const reserveCenterPosition = getCenterPosition(
-      { x: reserveRect.x, y: reserveRect.y },
-      { width: reserveRect.width, height: reserveRect.height }
+      { x: reserve.position.x, y: reserve.position.y },
+      { width: reserve.size.width, height: reserve.size.height }
     )
-    const newIngredient = {
+
+    const reserveCenterPositionPercent = {
+      x: (reserveCenterPosition.x / windowDimensions.width) * 100,
+      y: (reserveCenterPosition.y / windowDimensions.height) * 100
+    }
+
+    const widthPercent = 8
+    const size = {
+      width: windowDimensions.width * (widthPercent / 100),
+      height: windowDimensions.height * (widthPercent / 100)
+    }
+
+    const newIngredient: TypeIngredient = {
       id: Math.floor(Math.random() * 10000000000),
       type: type,
       position: reserveCenterPosition,
+      positionPercent: reserveCenterPositionPercent,
+      size: size,
+      widthPercent: widthPercent,
       isCut: false,
+      cutIndex: 0,
       isDragged: true
     }
 
     setIngredients((prevIngredients) => [...prevIngredients, newIngredient])
 
     const handleMouseMove = (e: MouseEvent) => {
-      const newPosition = { x: e.clientX, y: e.clientY }
+      const newPosition = {
+        x: e.clientX - newIngredient.size.width / 2 - windowDimensions.left,
+        y: e.clientY - newIngredient.size.height / 2 - windowDimensions.top
+      }
       handleIngredientDrag(newIngredient.id, newPosition, newIngredient.isCut)
     }
 
@@ -152,23 +198,113 @@ const App = () => {
   useEffect(() => {
     const handleResize = () => {
       // Update lasagna plate size
-      const rect = cuttingPlateRef?.current?.getBoundingClientRect()
-      setCuttingPlateSize({
-        width: rect?.width || 0,
-        height: rect?.height || 0
+      setLasagnaPlatePosition((prevLasagnaPlatePosition) => {
+        const computedHeight =
+          lasagnaPlateRef.current?.getBoundingClientRect().height
+
+        const newPosition = {
+          x:
+            windowDimensions.width *
+            (prevLasagnaPlatePosition.positionPercent.x / 100),
+          y:
+            windowDimensions.height *
+            (prevLasagnaPlatePosition.positionPercent.y / 100)
+        }
+
+        const newSize = {
+          width:
+            windowDimensions.width *
+            (prevLasagnaPlatePosition.widthPercent / 100),
+          height: computedHeight ? computedHeight : 0
+        }
+
+        return {
+          ...prevLasagnaPlatePosition,
+          position: newPosition,
+          size: newSize
+        }
+      })
+
+      setCuttingPlatePosition((prevCuttingPlatePosition) => {
+        const computedHeight =
+          cuttingPlateRef.current?.getBoundingClientRect().height
+
+        const newPosition = {
+          x:
+            windowDimensions.width *
+            (prevCuttingPlatePosition.positionPercent.x / 100),
+          y:
+            windowDimensions.height *
+            (prevCuttingPlatePosition.positionPercent.y / 100)
+        }
+
+        const newSize = {
+          width:
+            windowDimensions.width *
+            (prevCuttingPlatePosition.widthPercent / 100),
+          height: computedHeight ? computedHeight : 0
+        }
+
+        return {
+          ...prevCuttingPlatePosition,
+          position: newPosition,
+          size: newSize
+        }
       })
 
       // Update reserves size
       setReserves((prevReserves) => {
         return prevReserves.map((reserve) => {
+          const computedHeight =
+            reservesRefs.current[reserve.id].current?.getBoundingClientRect()
+              .height
+
+          const { positionPercent } = reserve
+          const newPosition = {
+            x: windowDimensions.width * (positionPercent.x / 100),
+            y: windowDimensions.height * (positionPercent.y / 100)
+          }
+
           const { widthPercent } = reserve
           const newSize = {
             width: windowDimensions.width * (widthPercent / 100),
-            height: windowDimensions.height * (widthPercent / 100)
+            height: computedHeight
           }
 
           return {
             ...reserve,
+            position: newPosition,
+            size: newSize
+          }
+        })
+      })
+
+      // Update ingredients size
+      setIngredients((prevIngredients) => {
+        return prevIngredients.map((ingredient) => {
+          const ingredientEl = document.querySelector(
+            `[data-id='${ingredient.id}']`
+          ) as HTMLElement
+
+          if (!ingredientEl) return ingredient
+
+          const computedHeight = ingredientEl.getBoundingClientRect().height
+
+          const { positionPercent } = ingredient
+          const newPosition = {
+            x: windowDimensions.width * (positionPercent.x / 100),
+            y: windowDimensions.height * (positionPercent.y / 100)
+          }
+
+          const { widthPercent } = ingredient
+          const newSize = {
+            width: windowDimensions.width * (widthPercent / 100),
+            height: computedHeight
+          }
+
+          return {
+            ...ingredient,
+            position: newPosition,
             size: newSize
           }
         })
@@ -176,15 +312,15 @@ const App = () => {
 
       // Update window dimensions
       const ratio = 16 / 9
+      const padding = 60
       const isWidthBigger = window.innerWidth / window.innerHeight > ratio
       const isHeightBigger = window.innerWidth / window.innerHeight < ratio
-      const padding = 60
 
       const width = isWidthBigger
-        ? window.innerHeight * ratio
+        ? window.innerHeight * ratio - padding * ratio
         : window.innerWidth - padding
       const height = isHeightBigger
-        ? window.innerWidth / ratio
+        ? window.innerWidth / ratio - padding / ratio
         : window.innerHeight - padding
       const left = isWidthBigger ? (window.innerWidth - width) / 2 : padding / 2
       const top = isHeightBigger
@@ -205,53 +341,98 @@ const App = () => {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
+  }, [windowDimensions.width, windowDimensions.height])
 
   useEffect(() => {
     const handleIngredientMouseUp = () => {
       const ingredient = ingredients.find((ingredient) => ingredient.isDragged)!
       if (!ingredient) return
 
-      const getIsInsideLasagna = (rect: DOMRect) => {
+      const getIsInsideElement = (specs: {
+        x: number
+        y: number
+        width: number
+        height: number
+      }) => {
         return (
-          ingredient.position.x > rect.x &&
-          ingredient.position.x < rect.x + rect.width &&
-          ingredient.position.y > rect.y &&
-          ingredient.position.y < rect.y + rect.height
+          ingredient.position.x + ingredient.size.width / 2 > specs.x &&
+          ingredient.position.x + ingredient.size.width / 2 <
+            specs.x + specs.width &&
+          ingredient.position.y + ingredient.size.height / 2 > specs.y &&
+          ingredient.position.y + ingredient.size.height / 2 <
+            specs.y + specs.height
         )
       }
 
-      const lasagnaPlateRect = lasagnaPlateRef.current?.getBoundingClientRect()
-      const isInsideLasagna = getIsInsideLasagna(lasagnaPlateRect!)
+      const isInsideLasagna = getIsInsideElement({
+        x: lasagnaPlatePosition.position.x,
+        y: lasagnaPlatePosition.position.y,
+        width: lasagnaPlatePosition.size.width,
+        height: lasagnaPlatePosition.size.height
+      })
 
-      if (!ingredient.isCut && isInsideLasagna) {
+      const isInsideCuttingPlate = getIsInsideElement({
+        x: cuttingPlatePosition.position.x,
+        y: cuttingPlatePosition.position.y,
+        width: cuttingPlatePosition.size.width,
+        height: cuttingPlatePosition.size.height
+      })
+
+      const handleSetIngredients = (
+        position: { x: number; y: number },
+        size: { width: number; height: number }
+      ) => {
+        const center = getCenterPosition(position, size)
+        const ingredientEl = document.querySelector(
+          `[data-id='${ingredient.id}']`
+        ) as HTMLElement
+        const computedHeight = ingredientEl.getBoundingClientRect().height
+
+        const newPositionPercent = {
+          x:
+            ((center.x - ingredient.size.width / 2) / windowDimensions.width) *
+            100,
+          y: ((center.y - computedHeight / 2) / windowDimensions.height) * 100
+        }
+
+        const newPosition = {
+          x: center.x - ingredient.size.width / 2,
+          y: center.y - computedHeight / 2
+        }
+
         setIngredients((prevIngredients) =>
           prevIngredients.map((prevIngredient) =>
             prevIngredient.id === ingredient.id
               ? {
                   ...prevIngredient,
                   isDragged: false,
-                  position: getCenterPosition(
-                    lasagnaPlatePosition,
-                    lasagnaPlateSize
-                  )
+                  positionPercent: newPositionPercent,
+                  position: newPosition
                 }
               : prevIngredient
           )
         )
+      }
+
+      if (!ingredient.isCut && isInsideLasagna) {
+        handleSetIngredients(
+          lasagnaPlatePosition.position,
+          lasagnaPlatePosition.size
+        )
+      } else if (
+        !ingredient.isCut &&
+        isInsideCuttingPlate &&
+        !cuttingPlateIngredientId
+      ) {
+        setCuttingPlateIngredientId(ingredient.id)
+        handleSetIngredients(
+          cuttingPlatePosition.position,
+          cuttingPlatePosition.size
+        )
       } else {
         setIngredients((prevIngredients) =>
-          prevIngredients.map((prevIngredient) =>
-            prevIngredient.id === ingredient.id
-              ? {
-                  ...prevIngredient,
-                  isDragged: false,
-                  position: getCenterPosition(
-                    cuttingPlatePosition,
-                    cuttingPlateSize
-                  )
-                }
-              : prevIngredient
+          prevIngredients.filter(
+            (prevIngredient) => prevIngredient.id !== ingredient.id
           )
         )
       }
@@ -264,9 +445,8 @@ const App = () => {
   }, [
     ingredients,
     cuttingPlatePosition,
-    cuttingPlateSize,
     lasagnaPlatePosition,
-    lasagnaPlateSize
+    lasagnaPlatePosition
   ])
 
   useEffect(() => {
@@ -276,24 +456,44 @@ const App = () => {
     })
   }, [])
 
+  const getImageUrl = (x: string) => {
+    return new URL(`/src/assets/img/${x}`, import.meta.url).href
+  }
+
   const renderIngredient = (item: TypeIngredient) => {
     const ingredientStyle = {
       top: item.position.y,
-      left: item.position.x
+      left: item.position.x,
+      width: `${item.size.width}px`,
+      height: 'auto'
     }
+
+    const steps = 3
+    const imageUrls = Array.from(Array(steps).keys()).map((index) =>
+      getImageUrl(`ingredients/${item.type}_${index}.png`)
+    )
 
     return (
       <div
         key={item.id}
-        className={`ingredient ${item.type} ${item.isCut ? 'cut' : ''}`}
-        style={{ position: 'absolute', ...ingredientStyle }}
-        draggable
+        className={`ingredient ${item.type}`}
+        data-id={item.id}
+        style={{
+          position: 'absolute',
+          ...ingredientStyle
+        }}
+        draggable={false}
         onDrag={(e) => {
           const newPosition = { x: e.clientX, y: e.clientY }
           handleIngredientDrag(item.id, newPosition, item.isCut)
         }}
       >
-        {item.type}
+        <img
+          src={imageUrls[item.cutIndex]}
+          className='ingredient-img'
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+          draggable={false}
+        />
       </div>
     )
   }
@@ -303,22 +503,27 @@ const App = () => {
       top: item.position.y,
       left: item.position.x,
       width: `${item.size.width}px`,
-      // height: `${item.size.height}px`
-      height: 'auto',
-      backgroundColor: 'red'
+      height: 'auto'
     }
+
+    const imageUrl = getImageUrl(`reserves/${item.type}_bol.png`)
 
     return (
       <div
         key={item.id}
-        className={`ingredient reserve ${item.type}`}
-        style={reserveStyle}
+        className={`reserve ${item.type}`}
+        style={{ position: 'absolute', ...reserveStyle }}
         ref={reservesRefs.current[item.id]}
         onMouseDown={() => {
           handleReserveClick(item.id, item.type)
         }}
       >
-        reserve: {item.type}
+        <img
+          src={imageUrl}
+          className='bol'
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+          draggable={false}
+        />
       </div>
     )
   }
@@ -345,63 +550,74 @@ const App = () => {
           height: windowDimensions.height
         }}
       >
-        <div ref={screenFirstRef} className='screen first'>
-          <div
-            className='plat'
-            style={{
-              top: lasagnaPlatePosition.y,
-              left: lasagnaPlatePosition.x,
-              width: `${lasagnaPlateSize.width}px`,
-              height: `${lasagnaPlateSize.height}px`
-            }}
-            ref={lasagnaPlateRef}
-          >
-            lasagnaPlateRef
-          </div>
-          <div
-            className='planche'
-            style={{
-              top: cuttingPlatePosition.y,
-              left: cuttingPlatePosition.x,
-              width: `${cuttingPlateSize.width}px`,
-              height: `${cuttingPlateSize.height}px`
-            }}
-            ref={cuttingPlateRef}
-          >
-            cuttingPlateRef
-          </div>
-          <div className='reserves' style={{ position: 'absolute', zIndex: 3 }}>
-            {reserves.map((item) => {
-              switch (item.type) {
-                case 'tomato':
-                case 'onion':
-                case 'cheese':
-                  return renderReserve(item)
-                default:
-                  return null
-              }
-            })}
-          </div>
-          <div
-            className='ingredients'
-            style={{ position: 'absolute', zIndex: 4 }}
-          >
-            {ingredients.map((item) => {
-              switch (item.type) {
-                case 'tomato':
-                case 'onion':
-                case 'cheese':
-                  return renderIngredient(item)
-                default:
-                  return null
-              }
-            })}
+        <div
+          className='inside'
+          ref={insideRef}
+          onClick={() => {
+            // gsap.to(insideRef.current, {
+            //   onStart: () => {
+            //     setIsRight(!isRight)
+            //   },
+            //   duration: 0.6,
+            //   ease: 'power4.easeOut',
+            //   scrollTo: {
+            //     x: isRight ? 0 : (windowDimensions.width * 45) / 100
+            //   }
+            // })
+          }}
+        >
+          <div className='inside-wrapper'>
+            <div
+              className='planche'
+              style={{
+                top: cuttingPlatePosition.position.y,
+                left: cuttingPlatePosition.position.x,
+                width: `${cuttingPlatePosition.size.width}px`,
+                height: 'auto'
+              }}
+              ref={cuttingPlateRef}
+            >
+              <img
+                src={PlancheImg}
+                alt='Planche'
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+                draggable={false}
+              />
+            </div>
+            <div
+              className='plat'
+              style={{
+                left: lasagnaPlatePosition.position.x,
+                top: lasagnaPlatePosition.position.y,
+                width: `${lasagnaPlatePosition.size.width}px`,
+                height: 'auto'
+              }}
+              ref={lasagnaPlateRef}
+            >
+              <img
+                src={PlancheImg}
+                alt='Lasagnes'
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+                draggable={false}
+              />
+            </div>
+            <div
+              className='reserves'
+              style={{ position: 'absolute', zIndex: 3 }}
+            >
+              {reserves.map((item) => renderReserve(item))}
+            </div>
+            <div
+              className='ingredients'
+              style={{ position: 'absolute', zIndex: 4 }}
+            >
+              {ingredients.map((item) => renderIngredient(item))}
+            </div>
+            <img className='background' src={CuisineImg} alt='Cusine' />
           </div>
         </div>
-        <div ref={screenSecondRef} className='screen second'></div>
         <AnimatePresence>{isModalOpen && <Mamie />}</AnimatePresence>
         <Map />
-        <img className='background' src={CuisineImg} alt='Cusine' />
       </WindowSizeContext.Provider>
     </main>
   )
