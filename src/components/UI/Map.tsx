@@ -79,8 +79,7 @@ const Map = () => {
       <div
         className='background-map'
         style={{
-          backgroundPositionX: `${bgPos}px`,
-          height: `${(windowSize.height * 20) / 100}px`
+          backgroundPositionX: `${bgPos}px`
         }}
       ></div>
 

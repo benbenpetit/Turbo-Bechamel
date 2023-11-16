@@ -3,10 +3,9 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 20vh;
+    height: calc(16 * var(--vh));
     width: 100vw;
-    background-image: url("src/assets/img/background1.png");
-    // background-size: cover;
+    background-image: url('src/assets/img/ville.png');
     background-position: bottom;
     overflow: hidden;
     border: solid 2px black;

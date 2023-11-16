@@ -30,12 +30,12 @@ const App = () => {
 
   const lasagnaPlateRef = useRef<HTMLDivElement>(null)
   const [lasagnaPlateSize] = useState({
-    width: 400,
-    height: 400
+    width: 200,
+    height: 200
   })
   const [lasagnaPlatePosition] = useState({
     x: 500 - lasagnaPlateSize.width / 2,
-    y: 400 - lasagnaPlateSize.height / 2
+    y: 200 - lasagnaPlateSize.height / 2
   })
 
   const cuttingPlateRef = useRef<HTMLDivElement>(null)
@@ -334,8 +334,8 @@ const App = () => {
           top: windowDimensions.top
         },
         {
-          '--vw': windowDimensions.width / 100,
-          '--vh': windowDimensions.height / 100
+          '--vw': windowDimensions.width / 100 + 'px',
+          '--vh': windowDimensions.height / 100 + 'px'
         } as CSSProperties
       )}
     >
