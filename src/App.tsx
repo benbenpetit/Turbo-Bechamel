@@ -10,6 +10,10 @@ import PlancheImg from '@/assets/img/planche.png'
 import { WindowSizeContext } from '@/contexts/WindowSize'
 import gsap from 'gsap'
 import { ScrollToPlugin } from 'gsap/all'
+import Footer from './components/UI/Footer'
+import Kitchen from '@/assets/img/cuisine.png'
+import Home from './components/UI/Home'
+import TV from './components/UI/TV'
 // import Rape from '@/components/Kitchen/Rape'
 // import Couteau from '@/components/Kitchen/Couteau'
 // import DragItem from '@/components/DragItem'
@@ -468,6 +472,12 @@ const App = () => {
       height: 'auto'
     }
 
+    // let soundActivated = false;
+
+    const footerStart = () => {
+      console.log('click start')
+    }
+
     const steps = 3
     const imageUrls = Array.from(Array(steps).keys()).map((index) =>
       getImageUrl(`ingredients/${item.type}_${index}.png`)
@@ -616,8 +626,13 @@ const App = () => {
             <img className='background' src={CuisineImg} alt='Cusine' />
           </div>
         </div>
-        <AnimatePresence>{isModalOpen && <Mamie />}</AnimatePresence>
-        <Map />
+        <Home
+          windowWidth={windowDimensions.width}
+          windowHeight={windowDimensions.height}
+        />
+        <Footer />
+        <TV />
+        <img className='background' src={Kitchen} alt='Cusine' />
       </WindowSizeContext.Provider>
     </main>
   )

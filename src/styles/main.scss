@@ -18,6 +18,10 @@
 @import './components/drag-item';
 @import './components/planche';
 @import './components/plat';
+@import './components/Home';
+@import './components/Footer';
+@import './components/Button';
+@import './components/TV';
 
 *,
 *::before,
@@ -44,7 +48,7 @@ body {
 main {
   position: absolute;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 32px;
 
   .screen {
     position: absolute;

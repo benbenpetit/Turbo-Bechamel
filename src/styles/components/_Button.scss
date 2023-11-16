@@ -1,0 +1,36 @@
+.button-orange-container {
+  .button {
+    position: relative;
+  }
+  img {
+    height: 8vh;
+  }
+
+  .label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -80%);
+    max-width: 100%;
+    max-height: 100%;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      font-family: "VT323";
+      font-size: 1.5rem;
+      // transform: translate(-50%, -80%);
+      text-transform: uppercase;
+      color: black;
+    }
+
+    img {
+      object-fit: contain;
+      max-width: 60%;
+      max-height: 60%;
+      transform: translate(0%, 15%);
+    }
+  }
+}
