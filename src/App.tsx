@@ -17,6 +17,8 @@ import TV from './components/UI/TV'
 import { Howl, Howler } from 'howler'
 import React, { Component } from 'react'
 import ReactHowler from 'react-howler'
+import GunshotYellow from '@/assets/img/gunshot_yellow.gif'
+import GunshotBlue from '@/assets/img/gunshot_blue.gif'
 
 // import Rape from '@/components/Kitchen/Rape'
 // import Couteau from '@/components/Kitchen/Couteau'
@@ -60,6 +62,8 @@ type TypeWeapon = {
   size: { width: number; height: number }
   widthPercent: number
   isGrabbed: boolean
+  correction: { x: number; y: number }
+  color: 'yellow' | 'blue'
 }
 
 const App = () => {
@@ -147,7 +151,9 @@ const App = () => {
       basePositionPercent: { x: 56, y: 12 },
       size: { width: 0, height: 0 },
       widthPercent: 16,
-      isGrabbed: false
+      isGrabbed: false,
+      correction: { x: 33, y: -17 },
+      color: 'blue'
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -158,7 +164,9 @@ const App = () => {
       basePositionPercent: { x: 64, y: 14 },
       size: { width: 0, height: 0 },
       widthPercent: 16,
-      isGrabbed: false
+      isGrabbed: false,
+      correction: { x: 34, y: -55 },
+      color: 'yellow'
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -169,7 +177,9 @@ const App = () => {
       basePositionPercent: { x: 72, y: 10 },
       size: { width: 0, height: 0 },
       widthPercent: 18,
-      isGrabbed: false
+      isGrabbed: false,
+      correction: { x: 50, y: -20 },
+      color: 'yellow'
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -180,7 +190,9 @@ const App = () => {
       basePositionPercent: { x: 82, y: 9 },
       size: { width: 0, height: 0 },
       widthPercent: 16,
-      isGrabbed: false
+      isGrabbed: false,
+      correction: { x: 60, y: 10 },
+      color: 'yellow'
     }
   ])
 
@@ -193,6 +205,7 @@ const App = () => {
 
   const gunshotRef = useRef<HTMLDivElement>(null)
   const [gunshotPosition, setGunshotPosition] = useState({ x: 0, y: 0 })
+  const [isGunshotVisible, setIsGunshotVisible] = useState(false)
 
   const isInWeaponsArea = (mousePos: { x: number; y: number }) => {
     const { position, size } = weaponsArea
@@ -353,6 +366,18 @@ const App = () => {
             : prevWeapon
         )
       )
+
+      const mousePos = {
+        x:
+          e.clientX -
+          windowDimensions.left +
+          (isRight ? (windowDimensions.width * 45) / 100 : 0),
+        y: e.clientY - windowDimensions.top
+      }
+      setGunshotPosition({
+        x: mousePos.x + selectedWeapon.correction.x,
+        y: mousePos.y + selectedWeapon.correction.y
+      })
     }
 
     document.addEventListener('mousemove', handleMouseMove)
@@ -360,7 +385,7 @@ const App = () => {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [selectedWeapon])
+  }, [selectedWeapon, isRight])
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
@@ -389,8 +414,15 @@ const App = () => {
                 : prevWeapon
             )
           )
-        } else {
-          setGunshotPosition(mousePos)
+        } else if (!isGunshotVisible) {
+          setIsGunshotVisible(true)
+          setTimeout(() => {
+            setIsGunshotVisible(false)
+          }, 200)
+          setGunshotPosition({
+            x: mousePos.x + selectedWeapon.correction.x,
+            y: mousePos.y + selectedWeapon.correction.y
+          })
         }
       }
     }
@@ -810,7 +842,7 @@ const App = () => {
     )
   }
 
-  const [isGameStarted, setIsGameStarted] = useState(false)
+  const [isGameStarted, setIsGameStarted] = useState(true)
 
   const [startProgressBar, setStartProgressBar] = useState(false)
 
@@ -1037,11 +1069,22 @@ const App = () => {
             >
               {weapons.map((item) => renderWeapon(item))}
             </div>
-            <div
-              ref={gunshotRef}
-              className='gunshot'
-              style={{ left: gunshotPosition.x, top: gunshotPosition.y }}
-            ></div>
+            {isGunshotVisible && (
+              <div
+                ref={gunshotRef}
+                className='gunshot'
+                style={{ left: gunshotPosition.x, top: gunshotPosition.y }}
+              >
+                <img
+                  src={
+                    selectedWeapon.color === 'yellow'
+                      ? GunshotYellow
+                      : GunshotBlue
+                  }
+                  alt='Coup de feu'
+                />
+              </div>
+            )}
             <img className='background' src={CuisineImg} alt='Cusine' />
           </div>
         </div>

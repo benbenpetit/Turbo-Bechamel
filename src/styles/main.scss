@@ -127,9 +127,13 @@ main {
 .gunshot {
   position: absolute;
   z-index: 4;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  background-color: #252525;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  width: 160px;
+  height: auto;
   pointer-events: none;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
 }
