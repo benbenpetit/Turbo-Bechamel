@@ -1010,7 +1010,7 @@ const App = () => {
               ref={lasagnaPlateRef}
             >
               {lasagnaIngredients.map((ingredient) => (
-                <div>{ingredient.id}</div>
+                <div key={ingredient.id}>{ingredient.id}</div>
               ))}
               <img
                 src={PlancheImg}
