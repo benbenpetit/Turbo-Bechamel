@@ -911,6 +911,14 @@ const App = () => {
         setTimeout(() => {
           // SON DU FOUR
           console.log('son du four prêt')
+
+          const fourFiniSound = new Howl({
+            src: ['src/assets/sounds/goofy-fx/ready.mp3'],
+            volume: 1,
+          })
+
+          fourFiniSound.play()
+
           setFour((prevFour) => ({ ...prevFour, isReady: true }))
         }, 3000)
       } else {
