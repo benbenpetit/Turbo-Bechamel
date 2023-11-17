@@ -6,7 +6,7 @@ const Map = () => {
   let [bgPos, setBgPos] = useState(0);
   let [bgSpeed, setBgSpeed] = useState(1);
   let [mamiePosX, setMamiePosX] = useState(15);
-  let [dieselPosX, setDieselPosX] = useState(55);
+  let [dieselPosX, setDieselPosX] = useState(65);
   const tlVoitureMamie = useRef<GSAPTimeline>();
   const tlVoitureDiesel = useRef<GSAPTimeline>();
 
@@ -84,15 +84,15 @@ const Map = () => {
     <div className="container-map">
       <div
         className="background-map"
-        // style={{
-        //   backgroundPositionX: `${bgPos % 3000}%`,
-        // }}
+        style={{
+          backgroundPositionX: `${bgPos % 3000}%`,
+        }}
       >
         {/* <div className="trait-route"></div> */}
       </div>
 
       <div className="voitures">
-        <div className="trait-route"></div>
+        {/* <div className="trait-route"></div> */}
         <div className="voiture-mamie" style={{ left: `${mamiePosX}vw` }}>
           <img src="src/assets/img/car-mamie.gif" alt="" draggable="false" />
         </div>

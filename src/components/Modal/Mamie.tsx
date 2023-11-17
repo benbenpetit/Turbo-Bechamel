@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { easeIn, easeInOut, motion } from "framer-motion";
 import { gsap } from "gsap";
 
-const Mamie = () => {
+interface Props {
+  onPress: Function;
+}
+
+const Mamie : FC<Props> = ({onPress}) => {
 
   useEffect(() => {}, []);
 
@@ -13,6 +17,7 @@ const Mamie = () => {
       animate={{ opacity: 1, y:0 }}
       exit={{ opacity: 0, y:'-100%' }}
       transition={{duration:0.5, ease:easeInOut}}
+      onClick={() => onPress()}
     >
       <div className="modal">
         <img src="src/assets/img/mamie.png" alt="" draggable="false" />
