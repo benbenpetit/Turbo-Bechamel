@@ -138,6 +138,14 @@ const App = () => {
       positionPercent: { x: 11, y: 42 },
       size: { width: 0, height: 0 },
       widthPercent: 16
+    },
+    {
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'pate',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 26, y: 56 },
+      size: { width: 0, height: 0 },
+      widthPercent: 16
     }
   ])
 
@@ -1013,7 +1021,7 @@ const App = () => {
     )
   }
 
-  const [isGameStarted, setIsGameStarted] = useState(false)
+  const [isGameStarted, setIsGameStarted] = useState(true)
 
   const [startProgressBar, setStartProgressBar] = useState(false)
 
