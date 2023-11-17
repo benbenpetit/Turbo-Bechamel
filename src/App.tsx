@@ -20,6 +20,10 @@ import React, { Component } from 'react'
 import ReactHowler from 'react-howler'
 import GunshotYellow from '@/assets/img/gunshot_yellow.gif'
 import GunshotBlue from '@/assets/img/gunshot_blue.gif'
+import FeuGif from '@/assets/img/feu.gif'
+import LasagnaImg from '@/assets/img/plat-lasagne.svg'
+import { motion } from 'framer-motion'
+import LasagnesFinishImg from '@/assets/img/lasagnes-finish.svg'
 
 // import Rape from '@/components/Kitchen/Rape'
 // import Couteau from '@/components/Kitchen/Couteau'
@@ -80,6 +84,8 @@ const App = () => {
     top: 0
   })
 
+  const [isLasagnaModal, setIsLasagnaModal] = useState(false)
+
   const cuttingPlateRef = useRef<HTMLDivElement>(null)
   const [cuttingPlatePosition, setCuttingPlatePosition] = useState({
     position: { x: 0, y: 0 },
@@ -92,9 +98,12 @@ const App = () => {
   const [lasagnaPlatePosition, setLasagnaPlatePosition] = useState({
     position: { x: 0, y: 0 },
     positionPercent: { x: 70, y: 42 },
+    basePosition: { x: 0, y: 0 },
+    basePositionPercent: { x: 70, y: 42 },
     size: { width: 0, height: 0 },
     widthPercent: 24
   })
+  const [isLasagnaGrabbed, setIsLasagnaGrabbed] = useState(false)
 
   const [cuttingPlateIngredientId, setCuttingPlateIngredientId] = useState<
     number | null
@@ -102,9 +111,7 @@ const App = () => {
 
   const [selectedWeapon, setSelectedWeapon] = useState<TypeWeapon | null>(null)
 
-  const [lasagnaIngredients, setLasagnaIngredients] = useState<
-    TypeIngredient[]
-  >([])
+  const [lasagnaIngredients, setLasagnaIngredients] = useState<string[]>([])
 
   const [reserves, setReserves] = useState<TypeReserve[]>([
     {
@@ -208,8 +215,29 @@ const App = () => {
   const [gunshotPosition, setGunshotPosition] = useState({ x: 0, y: 0 })
   const [isGunshotVisible, setIsGunshotVisible] = useState(false)
 
+  const [four, setFour] = useState({
+    position: { x: 0, y: 0 },
+    positionPercent: { x: 120, y: 70 },
+    size: { width: 0, height: 0 },
+    sizePercents: { width: 30, height: 30 },
+    isFill: false,
+    isReady: false
+  })
+
   const isInWeaponsArea = (mousePos: { x: number; y: number }) => {
     const { position, size } = weaponsArea
+    const { x, y } = mousePos
+
+    return (
+      x > position.x &&
+      x < position.x + size.width &&
+      y > position.y &&
+      y < position.y + size.height
+    )
+  }
+
+  const isInFourArea = (mousePos: { x: number; y: number }) => {
+    const { position, size } = four
     const { x, y } = mousePos
 
     return (
@@ -345,6 +373,36 @@ const App = () => {
     }
   }
 
+  const handleLasagnaClick = () => {
+    setIsLasagnaGrabbed(true)
+    const handleMouseMove = (e: MouseEvent) => {
+      const newPosition = {
+        x:
+          e.clientX -
+          lasagnaPlatePosition.size.width / 2 -
+          windowDimensions.left +
+          (isRight ? (windowDimensions.width * 45) / 100 : 0),
+        y:
+          e.clientY -
+          lasagnaPlatePosition.size.height / 2 -
+          windowDimensions.top
+      }
+      setLasagnaPlatePosition((prevLasagnaPlatePosition) => ({
+        ...prevLasagnaPlatePosition,
+        position: newPosition
+      }))
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    document.addEventListener('mouseup', handleMouseUp)
+  }
+
   useEffect(() => {
     if (!selectedWeapon) return
 
@@ -426,13 +484,43 @@ const App = () => {
           })
         }
       }
+
+      if (four.isFill && four.isReady) {
+        const isInsideFour = isInFourArea(mousePos)
+
+        if (isInsideFour) {
+          setFour((prevFour) => ({
+            ...prevFour,
+            isFill: false,
+            isReady: false
+          }))
+          handleOutLasagnes()
+        }
+      }
     }
 
     document.addEventListener('mousedown', handleMouseDown)
     return () => {
       document.removeEventListener('mousedown', handleMouseDown)
     }
-  }, [windowDimensions, selectedWeapon, isRight])
+  }, [windowDimensions, selectedWeapon, isRight, four])
+
+  const handleOutLasagnes = () => {
+    // SON DU FOUR SORTI
+    console.log('son du four sortie')
+    setIsLasagnaModal(true)
+    setTimeout(() => {
+      // SON DU FOUR SORTI
+      console.log('son du four sortie')
+      setIsLasagnaModal(false)
+    }, 2000)
+    setLasagnaIngredients([])
+    setLasagnaPlatePosition((prevLasagnaPlatePosition) => ({
+      ...prevLasagnaPlatePosition,
+      position: prevLasagnaPlatePosition.basePosition,
+      positionPercent: prevLasagnaPlatePosition.basePositionPercent
+    }))
+  }
 
   const getCenterPosition = (
     position: { x: number; y: number },
@@ -467,6 +555,25 @@ const App = () => {
 
         return {
           ...prevWeaponsArea,
+          position: newPosition,
+          size: newSize
+        }
+      })
+
+      // Update four area size
+      setFour((prevFour) => {
+        const newPosition = {
+          x: windowDimensions.width * (prevFour.positionPercent.x / 100),
+          y: windowDimensions.height * (prevFour.positionPercent.y / 100)
+        }
+
+        const newSize = {
+          width: windowDimensions.width * (prevFour.sizePercents.width / 100),
+          height: windowDimensions.height * (prevFour.sizePercents.height / 100)
+        }
+
+        return {
+          ...prevFour,
           position: newPosition,
           size: newSize
         }
@@ -655,7 +762,7 @@ const App = () => {
     )
     setLasagnaIngredients((prevLasagnaIngredients) => [
       ...prevLasagnaIngredients,
-      ingredient
+      ingredient.type
     ])
   }
 
@@ -755,15 +862,65 @@ const App = () => {
       }
     }
 
-    window.addEventListener('mouseup', handleIngredientMouseUp)
+    const handleLasagnaMouseUp = () => {
+      const getIsInsideElement = (specs: {
+        x: number
+        y: number
+        width: number
+        height: number
+      }) => {
+        return (
+          lasagnaPlatePosition.position.x +
+            lasagnaPlatePosition.size.width / 2 >
+            specs.x &&
+          lasagnaPlatePosition.position.x +
+            lasagnaPlatePosition.size.width / 2 <
+            specs.x + specs.width &&
+          lasagnaPlatePosition.position.y +
+            lasagnaPlatePosition.size.height / 2 >
+            specs.y &&
+          lasagnaPlatePosition.position.y +
+            lasagnaPlatePosition.size.height / 2 <
+            specs.y + specs.height
+        )
+      }
+
+      const isInsideFour = getIsInsideElement({
+        x: four.position.x,
+        y: four.position.y,
+        width: four.size.width,
+        height: four.size.height
+      })
+
+      if (isInsideFour && isLasagnaGrabbed) {
+        setIsLasagnaGrabbed(false)
+        setFour((prevFour) => ({ ...prevFour, isFill: true }))
+        setTimeout(() => {
+          // SON DU FOUR
+          console.log('son du four prêt')
+          setFour((prevFour) => ({ ...prevFour, isReady: true }))
+        }, 3000)
+      } else {
+        setIsLasagnaGrabbed(false)
+      }
+    }
+
+    const handleMouseUp = () => {
+      handleIngredientMouseUp()
+      handleLasagnaMouseUp()
+    }
+
+    window.addEventListener('mouseup', handleMouseUp)
     return () => {
-      window.removeEventListener('mouseup', handleIngredientMouseUp)
+      window.removeEventListener('mouseup', handleMouseUp)
     }
   }, [
     ingredients,
     cuttingPlatePosition,
     lasagnaPlatePosition,
-    lasagnaPlatePosition
+    lasagnaPlatePosition,
+    four,
+    isLasagnaGrabbed
   ])
 
   const getImageUrl = (x: string) => {
@@ -849,7 +1006,7 @@ const App = () => {
 
   const menuSound = new Howl({
     src: ['src/assets/sounds/music/goofy-prod.mp3'],
-    volume:0.8,
+    volume: 0.8
     // loop: true,
   })
 
@@ -966,6 +1123,34 @@ const App = () => {
     )
   }
 
+  const renderCouche = (ingredient, index) => {
+    const coucheStyle = {
+      width: '100%',
+      height: 8
+    }
+
+    const imageUrl = getImageUrl(`lasagnes-couche/${ingredient}.svg`)
+
+    return (
+      <div
+        key={`${ingredient}_${index}`}
+        style={{ position: 'relative', ...coucheStyle }}
+      >
+        <img
+          src={imageUrl}
+          alt='Lasagnes'
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0
+          }}
+          draggable={false}
+        />
+      </div>
+    )
+  }
+
   const goRight = () => {
     gsap.to(insideRef.current, {
       onComplete: () => {
@@ -1033,26 +1218,32 @@ const App = () => {
                 draggable={false}
               />
             </div>
-            <div
-              className='plat'
-              style={{
-                left: lasagnaPlatePosition.position.x,
-                top: lasagnaPlatePosition.position.y,
-                width: `${lasagnaPlatePosition.size.width}px`,
-                height: 'auto'
-              }}
-              ref={lasagnaPlateRef}
-            >
-              {lasagnaIngredients.map((ingredient) => (
-                <div key={ingredient.id}>{ingredient.id}</div>
-              ))}
-              <img
-                src={PlancheImg}
-                alt='Lasagnes'
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-                draggable={false}
-              />
-            </div>
+            {!four.isFill && (
+              <div
+                className='plat'
+                style={{
+                  left: lasagnaPlatePosition.position.x,
+                  top: lasagnaPlatePosition.position.y,
+                  width: `${lasagnaPlatePosition.size.width}px`,
+                  height: 'auto',
+                  transition: 'transform 0.225s cubic-bezier(0.4, 0, 0, 1)'
+                }}
+                ref={lasagnaPlateRef}
+                onMouseDown={() => handleLasagnaClick()}
+              >
+                <div className='couches'>
+                  {lasagnaIngredients.map((ingredient, index) =>
+                    renderCouche(ingredient, index)
+                  )}
+                </div>
+                <img
+                  src={LasagnaImg}
+                  alt='Lasagnes'
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                  draggable={false}
+                />
+              </div>
+            )}
             <div
               className='reserves'
               style={{ position: 'absolute', zIndex: 3 }}
@@ -1071,7 +1262,7 @@ const App = () => {
             >
               {weapons.map((item) => renderWeapon(item))}
             </div>
-            {isGunshotVisible && (
+            {isGunshotVisible && selectedWeapon && (
               <div
                 ref={gunshotRef}
                 className='gunshot'
@@ -1086,6 +1277,16 @@ const App = () => {
                   alt='Coup de feu'
                 />
               </div>
+            )}
+            {four.isFill && (
+              <>
+                <div className='feu first'>
+                  <img src={FeuGif} alt='Feux' />
+                </div>
+                <div className='feu second'>
+                  <img src={FeuGif} alt='Feux' />
+                </div>
+              </>
             )}
             <img className='background' src={CuisineImg} alt='Cusine' />
           </div>
@@ -1114,9 +1315,22 @@ const App = () => {
           }}
         />
         <TV />
-        <Background/>
-        <Map/>
-        </WindowSizeContext.Provider>
+        <Background />
+        <Map />
+        <AnimatePresence>
+          {isLasagnaModal && (
+            <motion.div className={'lasagna-modal'}>
+              <motion.img
+                initial={{ y: windowDimensions.height }}
+                animate={{ y: -windowDimensions.height }}
+                transition={{ duration: 2, ease: [0.4, 0, 0, 1] }}
+                src={LasagnesFinishImg}
+                alt='Lasagnes toutes jolies'
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </WindowSizeContext.Provider>
     </main>
   )
 }

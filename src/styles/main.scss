@@ -24,7 +24,6 @@
 @import './components/TV';
 @import './components/Background';
 
-
 *,
 *::before,
 *::after {
@@ -49,8 +48,7 @@ body {
 
 main {
   position: absolute;
-  // overflow: hidden;
-  // border-radius: 32px;
+  border-radius: 32px;
 
   .screen {
     position: absolute;
@@ -137,5 +135,56 @@ main {
   img {
     width: 100%;
     height: auto;
+  }
+}
+
+.feu {
+  position: absolute;
+  z-index: 4;
+  top: calc(-12 * var(--vh));
+  width: calc(30 * var(--vw));
+
+  img {
+    height: auto;
+    width: 100%;
+  }
+
+  &.first {
+    left: calc(99 * var(--vw));
+    transform: rotate(-70deg);
+  }
+
+  &.second {
+    left: calc(142 * var(--vw));
+    transform: scaleX(-1) rotate(-70deg);
+  }
+}
+
+.couches {
+  position: absolute;
+  left: 20px;
+  bottom: -6px;
+  right: 20px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.lasagna-modal {
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: calc(20 * var(--vw));
+    height: auto;
+    display: block;
   }
 }
