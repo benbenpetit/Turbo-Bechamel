@@ -512,8 +512,13 @@ const App = () => {
   }, [windowDimensions, selectedWeapon, isRight, four])
 
   const handleOutLasagnes = () => {
-    // SON DU FOUR SORTI
-    console.log('son du four sortie')
+
+    const fourSound = new Howl({
+      src: ['src/assets/sounds/goofy-fx/motor.mp3'],
+      volume: 1
+    })   
+    
+    fourSound.play()
     setIsLasagnaModal(true)
     setTimeout(() => {
       // SON DU FOUR SORTI
@@ -1012,6 +1017,8 @@ const App = () => {
 
   const [startProgressBar, setStartProgressBar] = useState(false)
 
+  const [trigRacefromApp, setTrigRacefromApp] = useState(false)
+
   const menuSound = new Howl({
     src: ['src/assets/sounds/music/goofy-prod.mp3'],
     volume: 1,
@@ -1041,7 +1048,8 @@ const App = () => {
   const startGame = () => {
     const gameSound = new Howl({
       src: ['src/assets/sounds/music/prod-loop.mp3'],
-      loop: true
+      volume: 1,
+      loop: true,
     })
 
     const mamieSound = new Howl({
@@ -1052,9 +1060,9 @@ const App = () => {
 
     if (!isGameStarted) {
       setTimeout(() => {
-        Howler.stop()
         setIsGameStarted(true)
         if (!gameSound.playing()) {
+          Howler.stop()
           gameSound.play()
         }
       }, 5000)
@@ -1062,6 +1070,7 @@ const App = () => {
       setTimeout(() => {
         setIsModalOpen(true)
         mamieSound.play()
+        setTrigRacefromApp(true)
       }, 25000)
     }
   }
@@ -1344,7 +1353,8 @@ const App = () => {
         />
         <TV />
         <Background />
-        <Map />
+        <Map 
+        />
         <AnimatePresence>
           {isLasagnaModal && (
             <motion.div className={'lasagna-modal'}>
@@ -1358,6 +1368,12 @@ const App = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <AnimatePresence>
+            {isModalOpen && <Mamie onPress={()=> {setIsModalOpen(false)}}/>}
+        </AnimatePresence>
+
+
       </WindowSizeContext.Provider>
     </main>
   )

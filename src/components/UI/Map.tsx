@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, FC } from "react";
 import { gsap } from "gsap";
 
 const Map = () => {
@@ -44,7 +44,7 @@ const Map = () => {
           ease: "none",
           duration: 1.2,
           rotation: -3,
-        });
+        })
 
       tlVoitureDiesel.current = gsap
         .timeline({
