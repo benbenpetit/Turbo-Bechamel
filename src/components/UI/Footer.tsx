@@ -4,19 +4,18 @@ import ButtonViolet from "./ButtonViolet";
 import ButtonSound from "./ButtonSound";
 
 interface Props {
-  // footerStart : Function;
-  // footerSound:boolean;
+  footerStart : Function;
+  footerSound: Function;
 }
 
-const Footer : FC<Props> = ({}) => {
+const Footer : FC<Props> = ({footerStart, footerSound}) => {
 
   const clickStart = () => {
-    console.log('ok');
-    // footerStart();
+    footerStart();
   }
 
   const clickSound = (isSoundActive:boolean) => {
-    console.log(isSoundActive);
+    footerSound(isSoundActive);
   }
 
   useEffect(() => {}, []);
