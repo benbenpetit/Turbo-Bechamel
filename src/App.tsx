@@ -46,6 +46,18 @@ type TypeIngredient = {
   isDragged: boolean
 }
 
+type TypeWeapon = {
+  id: number
+  type: string
+  position: { x: number; y: number }
+  positionPercent: { x: number; y: number }
+  basePosition: { x: number; y: number }
+  basePositionPercent: { x: number; y: number }
+  size: { width: number; height: number }
+  widthPercent: number
+  isGrabbed: boolean
+}
+
 const App = () => {
   const mainRef = useRef<HTMLElement>(null)
   const insideRef = useRef<HTMLDivElement>(null)
@@ -79,6 +91,8 @@ const App = () => {
     number | null
   >(null)
 
+  const [selectedWeapon, setSelectedWeapon] = useState<TypeWeapon | null>(null)
+
   const [lasagnaIngredients, setLasagnaIngredients] = useState<
     TypeIngredient[]
   >([])
@@ -88,7 +102,7 @@ const App = () => {
       id: Math.floor(Math.random() * 10000000000),
       type: 'tomate',
       position: { x: 0, y: 0 },
-      positionPercent: { x: 21, y: 30 },
+      positionPercent: { x: 21, y: 31 },
       size: { width: 0, height: 0 },
       widthPercent: 14
     },
@@ -98,13 +112,13 @@ const App = () => {
       position: { x: 0, y: 0 },
       positionPercent: { x: 2, y: 32 },
       size: { width: 0, height: 0 },
-      widthPercent: 12
+      widthPercent: 14
     },
     {
       id: Math.floor(Math.random() * 10000000000),
       type: 'ail',
       position: { x: 0, y: 0 },
-      positionPercent: { x: 10, y: 39 },
+      positionPercent: { x: 11, y: 42 },
       size: { width: 0, height: 0 },
       widthPercent: 16
     }
@@ -119,6 +133,50 @@ const App = () => {
     }, {})
   )
 
+  const [weapons, setWeapons] = useState<TypeWeapon[]>([
+    {
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'portal',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 56, y: 12 },
+      basePosition: { x: 0, y: 0 },
+      basePositionPercent: { x: 56, y: 12 },
+      size: { width: 0, height: 0 },
+      widthPercent: 16,
+      isGrabbed: false
+    },
+    {
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'double',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 64, y: 14 },
+      basePosition: { x: 0, y: 0 },
+      basePositionPercent: { x: 64, y: 14 },
+      size: { width: 0, height: 0 },
+      widthPercent: 16,
+      isGrabbed: false
+    }
+  ])
+
+  const [weaponsArea, setWeaponsArea] = useState({
+    position: { x: 0, y: 0 },
+    positionPercent: { x: 55, y: 6 },
+    size: { width: 0, height: 0 },
+    sizePercents: { width: 60, height: 30 }
+  })
+
+  const isInWeaponsArea = (mousePos: { x: number; y: number }) => {
+    const { position, size } = weaponsArea
+    const { x, y } = mousePos
+
+    return (
+      x > position.x &&
+      x < position.x + size.width &&
+      y > position.y &&
+      y < position.y + size.height
+    )
+  }
+
   const handleIngredientDrag = (
     id: number,
     newPosition: { x: number; y: number },
@@ -129,6 +187,24 @@ const App = () => {
         ingredient.id === id
           ? { ...ingredient, position: newPosition, isCut }
           : ingredient
+      )
+    )
+  }
+
+  const handleIngredientClick = (id: number, type: string) => {
+    const ingredient = ingredients.find((ingredient) => ingredient.id === id)!
+    if (!ingredient) return
+    if (ingredient.isCut) return
+
+    setIngredients((prevIngredients) =>
+      prevIngredients.map((prevIngredient) =>
+        prevIngredient.id === id
+          ? {
+              ...prevIngredient,
+              isCut: prevIngredient.cutIndex + 1 >= 2,
+              cutIndex: prevIngredient.cutIndex + 1
+            }
+          : prevIngredient
       )
     )
   }
@@ -185,6 +261,88 @@ const App = () => {
     document.addEventListener('mouseup', handleMouseUp)
   }
 
+  const handleWeaponClick = (id: number, type: string) => {
+    const weapon = weapons.find((weapon) => weapon.id === id)!
+    if (!weapon) return
+
+    if (!selectedWeapon) {
+      setTimeout(() => {
+        setWeapons((prevWeapons) =>
+          prevWeapons.map((prevWeapon) =>
+            prevWeapon.id === weapon.id
+              ? { ...prevWeapon, isGrabbed: true }
+              : prevWeapon
+          )
+        )
+        setSelectedWeapon(weapon)
+      }, 50)
+    }
+  }
+
+  useEffect(() => {
+    if (!selectedWeapon) return
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newPosition = {
+        x: e.clientX - selectedWeapon.size.width / 2 - windowDimensions.left,
+        y: e.clientY - selectedWeapon.size.height / 2 - windowDimensions.top
+      }
+      setWeapons((prevWeapons) =>
+        prevWeapons.map((prevWeapon) =>
+          prevWeapon.id === selectedWeapon.id
+            ? {
+                ...prevWeapon,
+                position: newPosition
+              }
+            : prevWeapon
+        )
+      )
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [selectedWeapon])
+
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      const mousePos = {
+        x:
+          e.clientX -
+          windowDimensions.left +
+          (isRight ? windowDimensions.width * 45 : 0),
+        y: e.clientY - windowDimensions.top
+      }
+
+      if (selectedWeapon) {
+        const isInsideWeaponsArea = isInWeaponsArea(mousePos)
+
+        if (isInsideWeaponsArea) {
+          setSelectedWeapon(null)
+          setWeapons((prevWeapons) =>
+            prevWeapons.map((prevWeapon) =>
+              prevWeapon.id === selectedWeapon.id
+                ? {
+                    ...prevWeapon,
+                    isGrabbed: false,
+                    position: prevWeapon.basePosition,
+                    positionPercent: prevWeapon.basePositionPercent
+                  }
+                : prevWeapon
+            )
+          )
+        }
+      }
+    }
+
+    document.addEventListener('mousedown', handleMouseDown)
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+    }
+  }, [windowDimensions, selectedWeapon])
+
   const getCenterPosition = (
     position: { x: number; y: number },
     size: { width: number; height: number }
@@ -201,6 +359,28 @@ const App = () => {
 
   useEffect(() => {
     const handleResize = () => {
+      // Update weapons area size
+      setWeaponsArea((prevWeaponsArea) => {
+        const newPosition = {
+          x: windowDimensions.width * (prevWeaponsArea.positionPercent.x / 100),
+          y: windowDimensions.height * (prevWeaponsArea.positionPercent.y / 100)
+        }
+
+        const newSize = {
+          width:
+            windowDimensions.width * (prevWeaponsArea.sizePercents.width / 100),
+          height:
+            windowDimensions.height *
+            (prevWeaponsArea.sizePercents.height / 100)
+        }
+
+        return {
+          ...prevWeaponsArea,
+          position: newPosition,
+          size: newSize
+        }
+      })
+
       // Update lasagna plate size
       setLasagnaPlatePosition((prevLasagnaPlatePosition) => {
         const computedHeight =
@@ -310,6 +490,35 @@ const App = () => {
             ...ingredient,
             position: newPosition,
             size: newSize
+          }
+        })
+      })
+
+      // Update weapons size
+      setWeapons((prevWeapons) => {
+        return prevWeapons.map((weapon) => {
+          const { positionPercent } = weapon
+          const newPosition = {
+            x: windowDimensions.width * (positionPercent.x / 100),
+            y: windowDimensions.height * (positionPercent.y / 100)
+          }
+
+          const { widthPercent } = weapon
+          const newSize = {
+            width: windowDimensions.width * (widthPercent / 100),
+            height: 0
+          }
+
+          const newBasePosition = {
+            x: windowDimensions.width * (weapon.basePositionPercent.x / 100),
+            y: windowDimensions.height * (weapon.basePositionPercent.y / 100)
+          }
+
+          return {
+            ...weapon,
+            position: newPosition,
+            size: newSize,
+            basePosition: newBasePosition
           }
         })
       })
@@ -497,6 +706,9 @@ const App = () => {
           const newPosition = { x: e.clientX, y: e.clientY }
           handleIngredientDrag(item.id, newPosition, item.isCut)
         }}
+        onClick={() => {
+          handleIngredientClick(item.id, item.type)
+        }}
       >
         <img
           src={imageUrls[item.cutIndex]}
@@ -532,6 +744,46 @@ const App = () => {
           src={imageUrl}
           className='bol'
           style={{ width: '100%', height: 'auto', display: 'block' }}
+          draggable={false}
+        />
+      </div>
+    )
+  }
+
+  const renderWeapon = (item: TypeWeapon) => {
+    const weaponStyle = {
+      top: item.position.y,
+      left: item.position.x,
+      width: `${item.size.width}px`,
+      height: 'auto',
+      transition: 'transform 0.225s cubic-bezier(0.4, 0, 0, 1)'
+    }
+
+    const transformStyle = {
+      transform: `rotate(${item.isGrabbed ? -35 : 90}deg)`
+    }
+
+    const imageUrl = getImageUrl(`weapons/${item.type}.png`)
+
+    return (
+      <div
+        key={item.id}
+        className={`weapon ${item.type}`}
+        style={{
+          position: 'absolute',
+          ...transformStyle,
+          ...weaponStyle
+        }}
+        onMouseDown={() => handleWeaponClick(item.id, item.type)}
+      >
+        <img
+          src={imageUrl}
+          className='bol'
+          style={{
+            width: '100%',
+            height: 'auto',
+            display: 'block'
+          }}
           draggable={false}
         />
       </div>
@@ -623,16 +875,21 @@ const App = () => {
             >
               {ingredients.map((item) => renderIngredient(item))}
             </div>
+            <div
+              className='weapons'
+              style={{ position: 'absolute', zIndex: 4 }}
+            >
+              {weapons.map((item) => renderWeapon(item))}
+            </div>
             <img className='background' src={CuisineImg} alt='Cusine' />
           </div>
         </div>
-        <Home
+        {/* <Home
           windowWidth={windowDimensions.width}
           windowHeight={windowDimensions.height}
-        />
+        /> */}
         <Footer />
         <TV />
-        <img className='background' src={Kitchen} alt='Cusine' />
       </WindowSizeContext.Provider>
     </main>
   )

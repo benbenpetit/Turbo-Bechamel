@@ -47,8 +47,8 @@ body {
 
 main {
   position: absolute;
-  overflow: hidden;
-  border-radius: 32px;
+  // overflow: hidden;
+  // border-radius: 32px;
 
   .screen {
     position: absolute;
@@ -83,7 +83,7 @@ main {
       left: 0;
       bottom: 0;
       right: 0;
-      width: calc(145 * var(--vw));
+      width: calc((((3013 - 1920) / 1920) * 100 + 100) * var(--vw));
       height: 100%;
     }
   }
