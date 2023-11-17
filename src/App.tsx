@@ -15,6 +15,9 @@ import Kitchen from '@/assets/img/cuisine.png'
 import Home from './components/UI/Home'
 import TV from './components/UI/TV'
 import { Howl, Howler } from 'howler'
+import React, { Component } from 'react'
+import ReactHowler from 'react-howler'
+
 // import Rape from '@/components/Kitchen/Rape'
 // import Couteau from '@/components/Kitchen/Couteau'
 // import DragItem from '@/components/DragItem'
@@ -809,9 +812,11 @@ const App = () => {
 
   const [isGameStarted, setIsGameStarted] = useState(false)
 
+  const [startProgressBar, setStartProgressBar] = useState(false)
+
   const menuSound = new Howl({
-    src: ['src/assets/sounds/music/goofy-prod.mp3'],
-    loop: true
+    src: ['src/assets/sounds/music/goofy-prod.mp3']
+    // loop: true,
   })
 
   useEffect(() => {
@@ -829,17 +834,60 @@ const App = () => {
   // const [isLoadingStart, setIsLoadingStart] = useState(false);
 
   const startGame = () => {
-    setIsGameStarted(true)
-    menuSound.mute()
-    gameSound.play()
+    const gameSound = new Howl({
+      src: ['src/assets/sounds/music/jazz-loop.mp3'],
+      loop: true
+    })
 
-    // startProgressBar();
-    // setIsLoadingStart(true);
+    setStartProgressBar(true)
+
+    setTimeout(() => {
+      setIsGameStarted(true)
+      gameSound.play()
+    }, 5000)
   }
 
-  // useEffect(() => {
-  //   startGame()
-  // }, [isLoadingStart]);
+  const leftArrowPressed = () => {
+    if (isGameStarted && isRight) {
+      const swipeSound = new Howl({
+        src: ['src/assets/sounds/goofy-fx/whistle2.mp3'],
+        volume: 0.8
+      })
+
+      swipeSound.play()
+      gsap.to(insideRef.current, {
+        onStart: () => {
+          setIsRight(!isRight)
+        },
+        duration: 0.6,
+        ease: 'power4.easeOut',
+        scrollTo: {
+          x: isRight ? 0 : (windowDimensions.width * 45) / 100
+        }
+      })
+    }
+  }
+  const RightArrowPressed = () => {
+    if (isGameStarted && !isRight) {
+      const swipeSound = new Howl({
+        src: ['src/assets/sounds/goofy-fx/whistle1.mp3'],
+        volume: 0.8
+      })
+
+      swipeSound.play()
+
+      gsap.to(insideRef.current, {
+        onStart: () => {
+          setIsRight(!isRight)
+        },
+        duration: 0.6,
+        ease: 'power4.easeOut',
+        scrollTo: {
+          x: isRight ? 0 : (windowDimensions.width * 45) / 100
+        }
+      })
+    }
+  }
 
   const renderWeapon = (item: TypeWeapon) => {
     const weaponStyle = {
@@ -1001,6 +1049,7 @@ const App = () => {
           <Home
             windowWidth={windowDimensions.width}
             windowHeight={windowDimensions.height}
+            startProgressBar={startProgressBar}
           />
         )}
         <Footer
@@ -1009,6 +1058,12 @@ const App = () => {
           }}
           footerSound={(isSoundActive: boolean) => {
             clickSoundButton(isSoundActive)
+          }}
+          footerLeft={() => {
+            leftArrowPressed()
+          }}
+          footerRight={() => {
+            RightArrowPressed()
           }}
           goRight={goRight}
           goLeft={goLeft}
