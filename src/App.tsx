@@ -4,6 +4,7 @@ import Foodtruck from './components/Kitchen/Foodtruck'
 import Marmite from './components/Kitchen/Marmite'
 import Mamie from './components/Modal/Mamie'
 import Map from './components/UI/Map'
+import Background from './components/Kitchen/Background'
 import { CSSProperties, createRef, useEffect, useRef, useState } from 'react'
 import CuisineImg from '@/assets/img/cuisine.png'
 import PlancheImg from '@/assets/img/planche.png'
@@ -847,7 +848,8 @@ const App = () => {
   const [startProgressBar, setStartProgressBar] = useState(false)
 
   const menuSound = new Howl({
-    src: ['src/assets/sounds/music/goofy-prod.mp3']
+    src: ['src/assets/sounds/music/goofy-prod.mp3'],
+    volume:0.8,
     // loop: true,
   })
 
@@ -1102,17 +1104,19 @@ const App = () => {
           footerSound={(isSoundActive: boolean) => {
             clickSoundButton(isSoundActive)
           }}
-          footerLeft={() => {
-            leftArrowPressed()
-          }}
-          footerRight={() => {
+          goRight={() => {
+            goRight()
             RightArrowPressed()
           }}
-          goRight={goRight}
-          goLeft={goLeft}
+          goLeft={() => {
+            goLeft()
+            leftArrowPressed()
+          }}
         />
         <TV />
-      </WindowSizeContext.Provider>
+        <Background/>
+        <Map/>
+        </WindowSizeContext.Provider>
     </main>
   )
 }
