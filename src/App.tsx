@@ -69,6 +69,7 @@ type TypeWeapon = {
   isGrabbed: boolean
   correction: { x: number; y: number }
   color: 'yellow' | 'blue'
+  soundID: string
 }
 
 const App = () => {
@@ -161,7 +162,8 @@ const App = () => {
       widthPercent: 16,
       isGrabbed: false,
       correction: { x: 33, y: -17 },
-      color: 'blue'
+      color: 'blue',
+      soundID: 'src/assets/sounds/goofy-fx/slip.mp3'
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -174,7 +176,8 @@ const App = () => {
       widthPercent: 16,
       isGrabbed: false,
       correction: { x: 34, y: -55 },
-      color: 'yellow'
+      color: 'yellow',
+      soundID: 'src/assets/sounds/goofy-fx/gun.mp3'
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -187,7 +190,8 @@ const App = () => {
       widthPercent: 18,
       isGrabbed: false,
       correction: { x: 50, y: -20 },
-      color: 'yellow'
+      color: 'yellow',
+      soundID: 'src/assets/sounds/goofy-fx/bavung.mp3'
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -200,7 +204,8 @@ const App = () => {
       widthPercent: 16,
       isGrabbed: false,
       correction: { x: 60, y: 10 },
-      color: 'yellow'
+      color: 'yellow',
+      soundID: 'src/assets/sounds/goofy-fx/boing.mp3'
     }
   ])
 
@@ -475,6 +480,7 @@ const App = () => {
           )
         } else if (!isGunshotVisible) {
           setIsGunshotVisible(true)
+          weaponSound.play()
           setTimeout(() => {
             setIsGunshotVisible(false)
           }, 200)
@@ -771,6 +777,8 @@ const App = () => {
       const ingredient = ingredients.find((ingredient) => ingredient.isDragged)!
       if (!ingredient) return
 
+      ingredientSound.play()
+
       const getIsInsideElement = (specs: {
         x: number
         y: number
@@ -1000,23 +1008,29 @@ const App = () => {
     )
   }
 
-  const [isGameStarted, setIsGameStarted] = useState(true)
+  const [isGameStarted, setIsGameStarted] = useState(false)
 
   const [startProgressBar, setStartProgressBar] = useState(false)
 
   const menuSound = new Howl({
     src: ['src/assets/sounds/music/goofy-prod.mp3'],
-    volume: 0.8
-    // loop: true,
+    volume: 1,
+    loop: true
+  })
+
+  const weaponSound = new Howl({
+    src: [selectedWeapon?.soundID || 'src/assets/sounds/goofy-fx/wobble.mp3'],
+    volume: 1
+  })
+
+  const ingredientSound = new Howl({
+    src: ['src/assets/sounds/goofy-fx/question.mp3'],
+    volume: 1
   })
 
   useEffect(() => {
     menuSound.play()
   }, [])
-
-  const gameSound = new Howl({
-    src: ['src/assets/sounds/music/jazz-loop.mp3']
-  })
 
   const clickSoundButton = (isSoundActive) => {
     !isSoundActive ? Howler.mute(false) : Howler.mute(true)
@@ -1026,23 +1040,37 @@ const App = () => {
 
   const startGame = () => {
     const gameSound = new Howl({
-      src: ['src/assets/sounds/music/jazz-loop.mp3'],
+      src: ['src/assets/sounds/music/prod-loop.mp3'],
       loop: true
+    })
+
+    const mamieSound = new Howl({
+      src: ['src/assets/sounds/goofy-fx/laugh.mp3']
     })
 
     setStartProgressBar(true)
 
-    setTimeout(() => {
-      setIsGameStarted(true)
-      gameSound.play()
-    }, 5000)
+    if (!isGameStarted) {
+      setTimeout(() => {
+        Howler.stop()
+        setIsGameStarted(true)
+        if (!gameSound.playing()) {
+          gameSound.play()
+        }
+      }, 5000)
+
+      setTimeout(() => {
+        setIsModalOpen(true)
+        mamieSound.play()
+      }, 25000)
+    }
   }
 
   const leftArrowPressed = () => {
     if (isGameStarted && isRight) {
       const swipeSound = new Howl({
         src: ['src/assets/sounds/goofy-fx/whistle2.mp3'],
-        volume: 0.8
+        volume: 1
       })
 
       swipeSound.play()
@@ -1062,7 +1090,7 @@ const App = () => {
     if (isGameStarted && !isRight) {
       const swipeSound = new Howl({
         src: ['src/assets/sounds/goofy-fx/whistle1.mp3'],
-        volume: 0.8
+        volume: 1
       })
 
       swipeSound.play()
