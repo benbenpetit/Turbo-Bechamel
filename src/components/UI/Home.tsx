@@ -10,6 +10,7 @@ interface Props {
 const Home: FC<Props> = ({ windowHeight, windowWidth }) => {
 const tlProgressBar = useRef<GSAPTimeline>()
 
+
   useEffect(() => {
 
       let ctx = gsap.context(() => {
@@ -46,7 +47,6 @@ const tlProgressBar = useRef<GSAPTimeline>()
 
 
   }, []);
-
 
 
   return (

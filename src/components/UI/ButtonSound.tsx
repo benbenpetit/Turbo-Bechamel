@@ -8,8 +8,8 @@ interface Props {
 }
 
 const ButtonSound: FC<Props> = ({ title, imgSrc, trigger, onPress }) => {
-  let [isPressed, setIsPressed] = useState(false);
-  let [isSoundActive, setIsSoundActive] = useState(false);
+  let [isPressed, setIsPressed] = useState(true);
+  let [isSoundActive, setIsSoundActive] = useState(true);
 
   const handleClick = () => {
     setIsSoundActive(!isSoundActive);

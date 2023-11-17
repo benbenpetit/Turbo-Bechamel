@@ -14,6 +14,7 @@ import Footer from './components/UI/Footer'
 import Kitchen from '@/assets/img/cuisine.png'
 import Home from './components/UI/Home'
 import TV from './components/UI/TV'
+import { Howl, Howler } from 'howler'
 // import Rape from '@/components/Kitchen/Rape'
 // import Couteau from '@/components/Kitchen/Couteau'
 // import DragItem from '@/components/DragItem'
@@ -681,12 +682,6 @@ const App = () => {
       height: 'auto'
     }
 
-    // let soundActivated = false;
-
-    const footerStart = () => {
-      console.log('click start')
-    }
-
     const steps = 3
     const imageUrls = Array.from(Array(steps).keys()).map((index) =>
       getImageUrl(`ingredients/${item.type}_${index}.png`)
@@ -749,6 +744,40 @@ const App = () => {
       </div>
     )
   }
+
+  const [isGameStarted, setIsGameStarted] = useState(false)
+
+  const menuSound = new Howl({
+    src: ['src/assets/sounds/music/goofy-prod.mp3'],
+    loop: true
+  })
+
+  useEffect(() => {
+    menuSound.play()
+  }, [])
+
+  const gameSound = new Howl({
+    src: ['src/assets/sounds/music/jazz-loop.mp3']
+  })
+
+  const clickSoundButton = (isSoundActive) => {
+    !isSoundActive ? Howler.mute(false) : Howler.mute(true)
+  }
+
+  // const [isLoadingStart, setIsLoadingStart] = useState(false);
+
+  const startGame = () => {
+    setIsGameStarted(true)
+    menuSound.mute()
+    gameSound.play()
+
+    // startProgressBar();
+    // setIsLoadingStart(true);
+  }
+
+  // useEffect(() => {
+  //   startGame()
+  // }, [isLoadingStart]);
 
   const renderWeapon = (item: TypeWeapon) => {
     const weaponStyle = {
@@ -884,11 +913,20 @@ const App = () => {
             <img className='background' src={CuisineImg} alt='Cusine' />
           </div>
         </div>
-        {/* <Home
-          windowWidth={windowDimensions.width}
-          windowHeight={windowDimensions.height}
-        /> */}
-        <Footer />
+        {!isGameStarted && (
+          <Home
+            windowWidth={windowDimensions.width}
+            windowHeight={windowDimensions.height}
+          />
+        )}
+        <Footer
+          footerStart={() => {
+            startGame()
+          }}
+          footerSound={(isSoundActive: boolean) => {
+            clickSoundButton(isSoundActive)
+          }}
+        />
         <TV />
       </WindowSizeContext.Provider>
     </main>
