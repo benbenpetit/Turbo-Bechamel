@@ -1,0 +1,35 @@
+.background-city-container {
+    position: absolute;
+    top:0;
+    left:0;
+    z-index:-3;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .background-city {
+        // position: absolute;
+        top:0;
+        left:0;
+        z-index:-3;
+        background: url("src/assets/img/city-bg.png") repeat-x;
+        object-fit: contain;
+        width: 500vw;
+        height: 350px;
+        animation: translation 30s infinite linear;
+    }
+
+
+
+}
+
+
+@keyframes translation {
+    from {
+      transform: translateX(0%);
+    }
+  
+    to {
+      transform: translateX(-50%);
+    }
+  }

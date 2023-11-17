@@ -1,18 +1,43 @@
 .container-map {
-  .background-map {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: calc(16 * var(--vh));
-    width: calc(100 * var(--vw));
-    background-image: url('src/assets/img/ville.png');
-    background-position: bottom;
-    overflow: hidden;
-    border: solid 2px black;
-  }
+  // .background-map {
+  //   position: absolute;
+  //   bottom: 0;
+  //   left: 0;
+  //   height: calc(16 * var(--vh));
+  //   width: calc(100 * var(--vw));
+  //   background-image: url('src/assets/img/ville.png');
+  //   background-position: bottom;
+  //   overflow: hidden;
+  //   border: solid 2px black;
+  // }
 
   .voitures {
+    .trait-route {
+      z-index: 40;
+      position: absolute;
+      bottom: 1vh;
+      left: 0;
+      height: 6px;
+      width: calc(var(--vw) * 100);
+      // background-color: black;
+      background-color: #ffffff;
+      opacity: 1;
+      background-color: rgba(255, 255, 255, 0);
+      opacity: 1;
+      background-image: linear-gradient(
+        to right,
+        #000000,
+        #000000 20px,
+        rgba(255, 255, 255, 0) 20px,
+        rgba(255, 255, 255, 0)
+      );
+      background-size: 50px 100%;
+      background-repeat: repeat;
+      transform: translate(0px, -40px);
+    }
+
     .voiture-mamie {
+      z-index: 50;
       position: absolute;
       bottom: calc(5 * var(--vh));
       img {
@@ -21,6 +46,8 @@
     }
 
     .voiture-diesel {
+      z-index: 50;
+
       position: absolute;
       bottom: calc(5 * var(--vh));
       img {
