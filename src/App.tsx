@@ -1,7 +1,4 @@
 import { AnimatePresence } from 'framer-motion'
-import EcraseTomate from './components/Kitchen/EcraseTomate'
-import Foodtruck from './components/Kitchen/Foodtruck'
-import Marmite from './components/Kitchen/Marmite'
 import Mamie from './components/Modal/Mamie'
 import Map from './components/UI/Map'
 import Background from './components/Kitchen/Background'
@@ -12,27 +9,15 @@ import { WindowSizeContext } from '@/contexts/WindowSize'
 import gsap from 'gsap'
 import { ScrollToPlugin } from 'gsap/all'
 import Footer from './components/UI/Footer'
-import Kitchen from '@/assets/img/cuisine.png'
 import Home from './components/UI/Home'
 import TV from './components/UI/TV'
 import { Howl, Howler } from 'howler'
-import React, { Component } from 'react'
-import ReactHowler from 'react-howler'
 import GunshotYellow from '@/assets/img/gunshot_yellow.gif'
 import GunshotBlue from '@/assets/img/gunshot_blue.gif'
 import FeuGif from '@/assets/img/feu.gif'
 import LasagnaImg from '@/assets/img/plat-lasagne.svg'
 import { motion } from 'framer-motion'
 import LasagnesFinishImg from '@/assets/img/lasagnes-finish.svg'
-
-// import Rape from '@/components/Kitchen/Rape'
-// import Couteau from '@/components/Kitchen/Couteau'
-// import DragItem from '@/components/DragItem'
-// import Planche from '@/components/Kitchen/Planche'
-// import TomatoesImg from '@/assets/img/tomatoes.jpeg'
-// import TomatoImg from '@/assets/img/tomato.png'
-// import Plat from '@/components/Kitchen/Plat'
-// import Tomate from '@/components/Kitchen/Tomates/Tomate'
 
 gsap.registerPlugin(ScrollToPlugin)
 
@@ -73,11 +58,9 @@ type TypeWeapon = {
 }
 
 const App = () => {
-  const mainRef = useRef<HTMLElement>(null)
   const insideRef = useRef<HTMLDivElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isRight, setIsRight] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -152,7 +135,7 @@ const App = () => {
   const [ingredients, setIngredients] = useState<TypeIngredient[]>([])
 
   const reservesRefs = useRef<any>(
-    reserves.reduce((acc, reserve) => {
+    reserves.reduce((acc: any, reserve) => {
       acc[reserve.id] = createRef()
       return acc
     }, {})
@@ -275,7 +258,7 @@ const App = () => {
     )
   }
 
-  const handleIngredientClick = (id: number, type: string) => {
+  const handleIngredientClick = (id: number) => {
     const ingredient = ingredients.find((ingredient) => ingredient.id === id)!
     if (!ingredient) return
     if (ingredient.isCut) return
@@ -368,7 +351,7 @@ const App = () => {
     document.addEventListener('mouseup', handleMouseUp)
   }
 
-  const handleWeaponClick = (id: number, type: string) => {
+  const handleWeaponClick = (id: number) => {
     const weapon = weapons.find((weapon) => weapon.id === id)!
     if (!weapon) return
 
@@ -520,12 +503,11 @@ const App = () => {
   }, [windowDimensions, selectedWeapon, isRight, four])
 
   const handleOutLasagnes = () => {
-
     const fourSound = new Howl({
       src: ['src/assets/sounds/goofy-fx/motor.mp3'],
       volume: 1
-    })   
-    
+    })
+
     fourSound.play()
     setIsLasagnaModal(true)
     setTimeout(() => {
@@ -549,10 +531,6 @@ const App = () => {
       x: position.x + size.width / 2,
       y: position.y + size.height / 2
     }
-  }
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    setMousePos({ x: e.clientX, y: e.clientY })
   }
 
   useEffect(() => {
@@ -974,7 +952,7 @@ const App = () => {
         }}
         draggable={false}
         onClick={() => {
-          handleIngredientClick(item.id, item.type)
+          handleIngredientClick(item.id)
         }}
         onMouseDown={() => {
           if (!item.isCut) return
@@ -1025,8 +1003,6 @@ const App = () => {
 
   const [startProgressBar, setStartProgressBar] = useState(false)
 
-  const [trigRacefromApp, setTrigRacefromApp] = useState(false)
-
   const menuSound = new Howl({
     src: ['src/assets/sounds/music/goofy-prod.mp3'],
     volume: 1,
@@ -1047,7 +1023,7 @@ const App = () => {
     menuSound.play()
   }, [])
 
-  const clickSoundButton = (isSoundActive) => {
+  const clickSoundButton = (isSoundActive: boolean) => {
     !isSoundActive ? Howler.mute(false) : Howler.mute(true)
   }
 
@@ -1057,7 +1033,7 @@ const App = () => {
     const gameSound = new Howl({
       src: ['src/assets/sounds/music/prod-loop.mp3'],
       volume: 1,
-      loop: true,
+      loop: true
     })
 
     const mamieSound = new Howl({
@@ -1078,7 +1054,6 @@ const App = () => {
       setTimeout(() => {
         setIsModalOpen(true)
         mamieSound.play()
-        setTrigRacefromApp(true)
       }, 25000)
     }
   }
@@ -1152,7 +1127,7 @@ const App = () => {
           ...transformStyle,
           ...weaponStyle
         }}
-        onMouseDown={() => handleWeaponClick(item.id, item.type)}
+        onMouseDown={() => handleWeaponClick(item.id)}
       >
         <img
           src={imageUrl}
@@ -1168,7 +1143,7 @@ const App = () => {
     )
   }
 
-  const renderCouche = (ingredient, index) => {
+  const renderCouche = (ingredient: string, index: number) => {
     const coucheStyle = {
       width: '100%',
       height: 8
@@ -1224,7 +1199,6 @@ const App = () => {
 
   return (
     <main
-      onMouseMove={handleMouseMove}
       style={Object.assign(
         {
           width: windowDimensions.width,
@@ -1361,8 +1335,7 @@ const App = () => {
         />
         <TV />
         <Background />
-        <Map 
-        />
+        <Map />
         <AnimatePresence>
           {isLasagnaModal && (
             <motion.div className={'lasagna-modal'}>
@@ -1378,10 +1351,14 @@ const App = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-            {isModalOpen && <Mamie onPress={()=> {setIsModalOpen(false)}}/>}
+          {isModalOpen && (
+            <Mamie
+              onPress={() => {
+                setIsModalOpen(false)
+              }}
+            />
+          )}
         </AnimatePresence>
-
-
       </WindowSizeContext.Provider>
     </main>
   )

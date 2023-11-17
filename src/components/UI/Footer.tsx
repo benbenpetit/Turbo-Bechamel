@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, FC } from 'react'
+import { useEffect, FC } from 'react'
 import ButtonOrange from './ButtonOrange'
 import ButtonViolet from './ButtonViolet'
 import ButtonSound from './ButtonSound'

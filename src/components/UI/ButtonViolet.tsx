@@ -1,45 +1,45 @@
-import { useEffect, useState, useRef, FC } from "react";
+import { useState, FC } from 'react'
 
 interface Props {
-  title?: string;
-  imgSrc?: string;
-  trigger:boolean;
-  onPress : Function;
+  title?: string
+  imgSrc?: string
+  trigger: boolean
+  onPress: Function
 }
 
-const ButtonViolet: FC<Props> = ({ title, imgSrc, trigger, onPress}) => {
-  let [isPressed, setIsPressed] = useState(false);
+const ButtonViolet: FC<Props> = ({ title, imgSrc, trigger, onPress }) => {
+  let [isPressed, setIsPressed] = useState(false)
 
   const handleClick = () => {
-onPress()
+    onPress()
     if (!trigger) {
-      setIsPressed(!isPressed);
+      setIsPressed(!isPressed)
     } else {
       let resetButton = () => {
-        setIsPressed(false);
-      };
-      setIsPressed(true);
-      setTimeout(resetButton, 100);
+        setIsPressed(false)
+      }
+      setIsPressed(true)
+      setTimeout(resetButton, 100)
     }
-  };
+  }
 
   return (
-    <div className="button-orange-container">
-      <div className="button" onClick={() => handleClick()}>
+    <div className='button-orange-container'>
+      <div className='button' onClick={() => handleClick()}>
         <img
           src={
             isPressed
-              ? "src/assets/img/button-violet-pressed.png"
-              : "src/assets/img/button-violet-neutral.png"
+              ? 'src/assets/img/button-violet-pressed.png'
+              : 'src/assets/img/button-violet-neutral.png'
           }
-          alt=""
+          alt=''
         />
         <div
-          className="label"
+          className='label'
           style={{
             transform: isPressed
-              ? "translate(-50%, -70%)"
-              : "translate(-50%, -80%)",
+              ? 'translate(-50%, -70%)'
+              : 'translate(-50%, -80%)'
           }}
         >
           {title && <span>{title}</span>}
@@ -47,17 +47,17 @@ onPress()
             <img
               src={
                 isPressed
-                  ? "src/assets/img/sound-on.png"
-                  : "src/assets/img/sound-off.png"
+                  ? 'src/assets/img/sound-on.png'
+                  : 'src/assets/img/sound-off.png'
               }
-              alt=""
-              draggable="false"
+              alt=''
+              draggable='false'
             />
           )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ButtonViolet;
+export default ButtonViolet

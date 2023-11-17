@@ -1,41 +1,41 @@
-import { FC } from "react";
-import { useEffect, useState, useRef } from "react";
-import { gsap } from "gsap";
+import { FC } from 'react'
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
 
 interface Props {
-  windowWidth: number;
-  windowHeight: number;
-  startProgressBar: boolean;
+  windowWidth: number
+  windowHeight: number
+  startProgressBar: boolean
 }
 
 const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
-  const tlProgressBar = useRef<GSAPTimeline>();
+  const tlProgressBar = useRef<GSAPTimeline>()
 
   tlProgressBar.current = gsap
     .timeline({
-      ease: "none",
-      paused: true,
+      ease: 'none',
+      paused: true
     })
-    .to(".progress", {
-      width: "120px",
+    .to('.progress', {
+      width: '120px',
       duration: 1.2,
-      ease: "none",
+      ease: 'none'
     })
-    .to(".progress", {
-      width: "230px",
+    .to('.progress', {
+      width: '230px',
       duration: 0.7,
-      ease: "none",
+      ease: 'none'
     })
-    .to(".progress", {
-      width: "320px",
+    .to('.progress', {
+      width: '320px',
       duration: 0.9,
-      ease: "none",
+      ease: 'none'
     })
-    .to(".progress", {
-      width: "400px",
+    .to('.progress', {
+      width: '400px',
       duration: 2,
-      ease: "none",
-    });
+      ease: 'none'
+    })
 
   useEffect(() => {
     // let ctx = gsap.context(() => {
@@ -48,7 +48,7 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
     // return () => {
     //   ctx.revert();
     // };
-  }, [startProgressBar]);
+  }, [startProgressBar])
 
   // useEffect(() => {
 
@@ -87,26 +87,26 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
 
   return (
     <div
-      className="Homepage"
+      className='Homepage'
       style={{ width: windowWidth, height: windowHeight }}
     >
-      <div className="background">
-        <div className="race-line"></div>
-        <div className="gradient"></div>
-        <div className="race-line"></div>
+      <div className='background'>
+        <div className='race-line'></div>
+        <div className='gradient'></div>
+        <div className='race-line'></div>
       </div>
-      <div className="logo">
-        <img src="src/assets/img/HomePage.gif" alt="" draggable="false" />
+      <div className='logo'>
+        <img src='src/assets/img/HomePage.gif' alt='' draggable='false' />
       </div>
-      <div className="menu">
-        <div className="loading">
-          <img src="src/assets/img/progress-bar.svg" alt="" />
-          <div className="progress"></div>
+      <div className='menu'>
+        <div className='loading'>
+          <img src='src/assets/img/progress-bar.svg' alt='' />
+          <div className='progress'></div>
         </div>
-        <div className="text blink">▶ Appuie sur Start</div>
+        <div className='text blink'>▶ Appuie sur Start</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

@@ -4,15 +4,14 @@ import { gsap } from 'gsap'
 const Map = () => {
   const reqAnim = useRef(0)
   let [bgPos, setBgPos] = useState(0)
-  let [bgSpeed, setBgSpeed] = useState(1)
-  let [mamiePosX, setMamiePosX] = useState(15)
-  let [dieselPosX, setDieselPosX] = useState(65)
+  let [bgSpeed] = useState(1)
+  let [mamiePosX] = useState(15)
+  let [dieselPosX] = useState(65)
   const tlVoitureMamie = useRef<GSAPTimeline>()
   const tlVoitureDiesel = useRef<GSAPTimeline>()
 
   const handleBgPos = () => {
     setBgPos((prev) => prev - bgSpeed)
-    const isClose = mamiePosX - dieselPosX < 20
     reqAnim.current = requestAnimationFrame(handleBgPos)
   }
 
