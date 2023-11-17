@@ -156,6 +156,28 @@ const App = () => {
       size: { width: 0, height: 0 },
       widthPercent: 16,
       isGrabbed: false
+    },
+    {
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'bow',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 72, y: 10 },
+      basePosition: { x: 0, y: 0 },
+      basePositionPercent: { x: 72, y: 10 },
+      size: { width: 0, height: 0 },
+      widthPercent: 18,
+      isGrabbed: false
+    },
+    {
+      id: Math.floor(Math.random() * 10000000000),
+      type: 'hardcore',
+      position: { x: 0, y: 0 },
+      positionPercent: { x: 82, y: 9 },
+      basePosition: { x: 0, y: 0 },
+      basePositionPercent: { x: 82, y: 9 },
+      size: { width: 0, height: 0 },
+      widthPercent: 16,
+      isGrabbed: false
     }
   ])
 
@@ -165,6 +187,9 @@ const App = () => {
     size: { width: 0, height: 0 },
     sizePercents: { width: 60, height: 30 }
   })
+
+  const gunshotRef = useRef<HTMLDivElement>(null)
+  const [gunshotPosition, setGunshotPosition] = useState({ x: 0, y: 0 })
 
   const isInWeaponsArea = (mousePos: { x: number; y: number }) => {
     const { position, size } = weaponsArea
@@ -186,7 +211,7 @@ const App = () => {
     setIngredients((prevIngredients) =>
       prevIngredients.map((ingredient) =>
         ingredient.id === id
-          ? { ...ingredient, position: newPosition, isCut }
+          ? { ...ingredient, position: newPosition, isCut, isDragged: true }
           : ingredient
       )
     )
@@ -196,6 +221,7 @@ const App = () => {
     const ingredient = ingredients.find((ingredient) => ingredient.id === id)!
     if (!ingredient) return
     if (ingredient.isCut) return
+    if (!selectedWeapon) return
 
     setIngredients((prevIngredients) =>
       prevIngredients.map((prevIngredient) =>
@@ -208,6 +234,28 @@ const App = () => {
           : prevIngredient
       )
     )
+  }
+
+  const handleIngredientMouseDown = (id: number) => {
+    const ingredient = ingredients.find((ingredient) => ingredient.id === id)!
+    if (!ingredient) return
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newPosition = {
+        x: e.clientX - ingredient.size.width / 2 - windowDimensions.left,
+        y: e.clientY - ingredient.size.height / 2 - windowDimensions.top
+      }
+      handleIngredientDrag(ingredient.id, newPosition, ingredient.isCut)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    document.addEventListener('mouseup', handleMouseUp)
   }
 
   const handleReserveClick = (id: number, type: string) => {
@@ -285,7 +333,11 @@ const App = () => {
 
     const handleMouseMove = (e: MouseEvent) => {
       const newPosition = {
-        x: e.clientX - selectedWeapon.size.width / 2 - windowDimensions.left,
+        x:
+          e.clientX -
+          selectedWeapon.size.width / 2 -
+          windowDimensions.left +
+          (insideRef.current?.scrollLeft || 0),
         y: e.clientY - selectedWeapon.size.height / 2 - windowDimensions.top
       }
       setWeapons((prevWeapons) =>
@@ -313,7 +365,7 @@ const App = () => {
         x:
           e.clientX -
           windowDimensions.left +
-          (isRight ? windowDimensions.width * 45 : 0),
+          (isRight ? (windowDimensions.width * 45) / 100 : 0),
         y: e.clientY - windowDimensions.top
       }
 
@@ -334,6 +386,8 @@ const App = () => {
                 : prevWeapon
             )
           )
+        } else {
+          setGunshotPosition(mousePos)
         }
       }
     }
@@ -342,7 +396,7 @@ const App = () => {
     return () => {
       document.removeEventListener('mousedown', handleMouseDown)
     }
-  }, [windowDimensions, selectedWeapon])
+  }, [windowDimensions, selectedWeapon, isRight])
 
   const getCenterPosition = (
     position: { x: number; y: number },
@@ -555,7 +609,19 @@ const App = () => {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [windowDimensions.width, windowDimensions.height])
+  }, [windowDimensions.width, windowDimensions.height, isRight])
+
+  const handleAddToLasagna = (ingredient: TypeIngredient) => {
+    setIngredients((prevIngredients) =>
+      prevIngredients.filter(
+        (prevIngredient) => prevIngredient.id !== ingredient.id
+      )
+    )
+    setLasagnaIngredients((prevLasagnaIngredients) => [
+      ...prevLasagnaIngredients,
+      ingredient
+    ])
+  }
 
   useEffect(() => {
     const handleIngredientMouseUp = () => {
@@ -628,15 +694,16 @@ const App = () => {
         )
       }
 
-      if (!ingredient.isCut && isInsideLasagna) {
+      if (ingredient.isCut && isInsideLasagna) {
         handleSetIngredients(
           lasagnaPlatePosition.position,
           lasagnaPlatePosition.size
         )
+        handleAddToLasagna(ingredient)
+        setCuttingPlateIngredientId(null)
       } else if (
-        !ingredient.isCut &&
-        isInsideCuttingPlate &&
-        !cuttingPlateIngredientId
+        (isInsideCuttingPlate && !cuttingPlateIngredientId) ||
+        cuttingPlateIngredientId === ingredient.id
       ) {
         setCuttingPlateIngredientId(ingredient.id)
         handleSetIngredients(
@@ -663,13 +730,6 @@ const App = () => {
     lasagnaPlatePosition
   ])
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    })
-  }, [])
-
   const getImageUrl = (x: string) => {
     return new URL(`/src/assets/img/${x}`, import.meta.url).href
   }
@@ -694,15 +754,17 @@ const App = () => {
         data-id={item.id}
         style={{
           position: 'absolute',
+          zIndex: item.isDragged ? 5 : 2,
+          cursor: item.isCut ? 'grab' : 'crosshair',
           ...ingredientStyle
         }}
         draggable={false}
-        onDrag={(e) => {
-          const newPosition = { x: e.clientX, y: e.clientY }
-          handleIngredientDrag(item.id, newPosition, item.isCut)
-        }}
         onClick={() => {
           handleIngredientClick(item.id, item.type)
+        }}
+        onMouseDown={() => {
+          if (!item.isCut) return
+          handleIngredientMouseDown(item.id)
         }}
       >
         <img
@@ -789,7 +851,9 @@ const App = () => {
     }
 
     const transformStyle = {
-      transform: `rotate(${item.isGrabbed ? -35 : 90}deg)`
+      transform: `translate(${item.isGrabbed ? '-40%, 20%' : 0}) rotate(${
+        item.isGrabbed ? -35 : 90
+      }deg)`
     }
 
     const imageUrl = getImageUrl(`weapons/${item.type}.png`)
@@ -799,6 +863,7 @@ const App = () => {
         key={item.id}
         className={`weapon ${item.type}`}
         style={{
+          pointerEvents: item.isGrabbed ? 'none' : 'all',
           position: 'absolute',
           ...transformStyle,
           ...weaponStyle
@@ -817,6 +882,32 @@ const App = () => {
         />
       </div>
     )
+  }
+
+  const goRight = () => {
+    gsap.to(insideRef.current, {
+      onComplete: () => {
+        setIsRight(true)
+      },
+      duration: 0.6,
+      ease: 'power4.easeOut',
+      scrollTo: {
+        x: (windowDimensions.width * 45) / 100
+      }
+    })
+  }
+
+  const goLeft = () => {
+    gsap.to(insideRef.current, {
+      onComplete: () => {
+        setIsRight(false)
+      },
+      duration: 0.6,
+      ease: 'power4.easeOut',
+      scrollTo: {
+        x: 0
+      }
+    })
   }
 
   return (
@@ -841,22 +932,7 @@ const App = () => {
           height: windowDimensions.height
         }}
       >
-        <div
-          className='inside'
-          ref={insideRef}
-          onClick={() => {
-            // gsap.to(insideRef.current, {
-            //   onStart: () => {
-            //     setIsRight(!isRight)
-            //   },
-            //   duration: 0.6,
-            //   ease: 'power4.easeOut',
-            //   scrollTo: {
-            //     x: isRight ? 0 : (windowDimensions.width * 45) / 100
-            //   }
-            // })
-          }}
-        >
+        <div className='inside' ref={insideRef}>
           <div className='inside-wrapper'>
             <div
               className='planche'
@@ -885,6 +961,9 @@ const App = () => {
               }}
               ref={lasagnaPlateRef}
             >
+              {lasagnaIngredients.map((ingredient) => (
+                <div>{ingredient.id}</div>
+              ))}
               <img
                 src={PlancheImg}
                 alt='Lasagnes'
@@ -910,6 +989,11 @@ const App = () => {
             >
               {weapons.map((item) => renderWeapon(item))}
             </div>
+            <div
+              ref={gunshotRef}
+              className='gunshot'
+              style={{ left: gunshotPosition.x, top: gunshotPosition.y }}
+            ></div>
             <img className='background' src={CuisineImg} alt='Cusine' />
           </div>
         </div>
@@ -926,6 +1010,8 @@ const App = () => {
           footerSound={(isSoundActive: boolean) => {
             clickSoundButton(isSoundActive)
           }}
+          goRight={goRight}
+          goLeft={goLeft}
         />
         <TV />
       </WindowSizeContext.Provider>
