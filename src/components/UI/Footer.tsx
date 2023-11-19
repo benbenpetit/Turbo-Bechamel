@@ -4,6 +4,7 @@ import ButtonViolet from './ButtonViolet'
 import ButtonSound from './ButtonSound'
 import ArrowLeftImg from '@/assets/img/arrow-l.svg'
 import ArrowRightImg from '@/assets/img/arrow-r.svg'
+import SoundOnImg from '@/assets/img/sound-on.png'
 
 interface Props {
   footerStart: Function
@@ -26,7 +27,7 @@ const Footer: FC<Props> = ({ footerStart, footerSound, goRight, goLeft }) => {
   return (
     <div className='footer'>
       <ButtonSound
-        imgSrc='src/assets/img/sound-on.png'
+        imgSrc={SoundOnImg}
         trigger={false}
         onPress={(isSoundActive: boolean) => {
           {

@@ -1,6 +1,7 @@
 import { useEffect, FC } from 'react'
 import { easeInOut, motion } from 'framer-motion'
 import MamieImg from '@/assets/img/mamie.png'
+import DangerImg from '@/assets/img/danger.svg'
 
 interface Props {
   onPress: Function
@@ -22,7 +23,7 @@ const Mamie: FC<Props> = ({ onPress }) => {
         <img src={MamieImg} alt='' draggable='false' />
         <div className='modal-text'>
           <div className='modal-text-title'>
-            <img src='src/assets/img/danger.svg' alt='' />
+            <img src={DangerImg} alt='' />
           </div>
           <div className='modal-text-content'>
             Mamie Mazout tente une percée sur le flanc gauche. Accélérez la

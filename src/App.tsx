@@ -29,6 +29,7 @@ import MotorSound from '@/assets/sounds/goofy-fx/motor.mp3'
 import ProdLoopSound from '@/assets/sounds/music/prod-loop.mp3'
 import LaughSound from '@/assets/sounds/goofy-fx/laugh.mp3'
 import Whistle1Sound from '@/assets/sounds/goofy-fx/whistle1.mp3'
+import Whistle2Sound from '@/assets/sounds/goofy-fx/whistle2.mp3'
 
 gsap.registerPlugin(ScrollToPlugin)
 
@@ -1072,7 +1073,7 @@ const App = () => {
   const leftArrowPressed = () => {
     if (isGameStarted && isRight) {
       const swipeSound = new Howl({
-        src: ['src/assets/sounds/goofy-fx/whistle2.mp3'],
+        src: [Whistle2Sound],
         volume: 1
       })
 

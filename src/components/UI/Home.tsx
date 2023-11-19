@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import HomeGif from '@/assets/img/HomePage.gif'
+import ProgressBarImg from '@/assets/img/progress-bar.svg'
 
 interface Props {
   windowWidth: number
@@ -59,7 +60,7 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
       </div>
       <div className='menu'>
         <div className='loading'>
-          <img src='src/assets/img/progress-bar.svg' alt='' />
+          <img src={ProgressBarImg} alt='' />
           <div className='progress'></div>
         </div>
         <div className='text blink'>▶ Appuie sur Start</div>
