@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { gsap } from 'gsap'
 import VilleImg from '@/assets/img/ville.png'
+import CarVinImg from '@/assets/img/car-vin.gif'
+import CarMamieImg from '@/assets/img/car-mamie.gif'
 
 const Map = () => {
   const reqAnim = useRef(0)
@@ -96,11 +98,11 @@ const Map = () => {
       <div className='voitures'>
         {/* <div className="trait-route"></div> */}
         <div className='voiture-mamie' style={{ left: `${mamiePosX}vw` }}>
-          <img src='src/assets/img/car-mamie.gif' alt='' draggable='false' />
+          <img src={CarMamieImg} alt='' draggable='false' />
         </div>
 
         <div className='voiture-diesel' style={{ left: `${dieselPosX}vw` }}>
-          <img src='src/assets/img/car-vin.gif' alt='' draggable='false' />
+          <img src={CarVinImg} alt='' draggable='false' />
         </div>
       </div>
     </div>

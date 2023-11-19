@@ -17,7 +17,7 @@ import GunshotBlue from '@/assets/img/gunshot_blue.gif'
 import FeuGif from '@/assets/img/feu.gif'
 import LasagnaImg from '@/assets/img/plat-lasagne.svg'
 import { motion } from 'framer-motion'
-import LasagnesFinishImg from '@/assets/img/lasagnes-finish.svg'
+import LasagnesFinishImg from '@/assets/img/lasagnes-finish.png'
 import GoofyProdSound from '@/assets/sounds/music/goofy-prod.mp3'
 import WobbleSound from '@/assets/sounds/goofy-fx/wobble.mp3'
 import QuestionSound from '@/assets/sounds/goofy-fx/question.mp3'
@@ -1010,7 +1010,7 @@ const App = () => {
     )
   }
 
-  const [isGameStarted, setIsGameStarted] = useState(true)
+  const [isGameStarted, setIsGameStarted] = useState(false)
 
   const [startProgressBar, setStartProgressBar] = useState(false)
 

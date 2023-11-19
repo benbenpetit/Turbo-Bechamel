@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
+import HomeGif from '@/assets/img/HomePage.gif'
 
 interface Props {
   windowWidth: number
@@ -38,52 +39,10 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
     })
 
   useEffect(() => {
-    // let ctx = gsap.context(() => {
-    // });
-
     if (startProgressBar) {
       tlProgressBar.current?.restart()
     }
-
-    // return () => {
-    //   ctx.revert();
-    // };
   }, [startProgressBar])
-
-  // useEffect(() => {
-
-  //     let ctx = gsap.context(() => {
-  //       tlProgressBar.current = gsap
-  //         .timeline({
-  //           ease:'none',
-  //         })
-  //         .to(".progress", {
-  //           width: "120px",
-  //           duration: 1.2,
-  //           ease:'none',
-  //         })
-  //         .to(".progress", {
-  //           width: "230px",
-  //           duration: 0.7,
-  //           ease:'none',
-  //         })
-  //         .to(".progress", {
-  //           width: "320px",
-  //           duration: 0.9,
-  //           ease:'none',
-  //         })
-  //         .to(".progress", {
-  //           width: "400px",
-  //           duration: 2,
-  //           ease:'none',
-  //         });
-  //     })
-
-  //     return () => {
-  //       ctx.revert()
-  //     }
-
-  // }, []);
 
   return (
     <div
@@ -96,7 +55,7 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
         <div className='race-line'></div>
       </div>
       <div className='logo'>
-        <img src='src/assets/img/HomePage.gif' alt='' draggable='false' />
+        <img src={HomeGif} alt='' draggable='false' />
       </div>
       <div className='menu'>
         <div className='loading'>

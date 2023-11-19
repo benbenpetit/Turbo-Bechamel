@@ -1,4 +1,6 @@
 import { useState, FC } from 'react'
+import ButtonOrangePressedImg from '@/assets/img/button-orange-pressed.png'
+import ButtonOrangeNeutralImg from '@/assets/img/button-orange-neutral.png'
 
 interface Props {
   title?: string
@@ -28,11 +30,7 @@ const ButtonOrange: FC<Props> = ({ title, imgSrc, trigger, onPress }) => {
     <div className='button-orange-container'>
       <div className='button' onClick={() => handleClick()}>
         <img
-          src={
-            isPressed
-              ? 'src/assets/img/button-orange-pressed.png'
-              : 'src/assets/img/button-orange-neutral.png'
-          }
+          src={isPressed ? ButtonOrangePressedImg : ButtonOrangeNeutralImg}
           alt=''
         />
         <div
