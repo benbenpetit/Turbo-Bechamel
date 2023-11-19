@@ -1,5 +1,6 @@
 import { useEffect, FC } from 'react'
 import { easeInOut, motion } from 'framer-motion'
+import MamieImg from '@/assets/img/mamie.png'
 
 interface Props {
   onPress: Function
@@ -18,7 +19,7 @@ const Mamie: FC<Props> = ({ onPress }) => {
       onClick={() => onPress()}
     >
       <div className='modal'>
-        <img src='src/assets/img/mamie.png' alt='' draggable='false' />
+        <img src={MamieImg} alt='' draggable='false' />
         <div className='modal-text'>
           <div className='modal-text-title'>
             <img src='src/assets/img/danger.svg' alt='' />

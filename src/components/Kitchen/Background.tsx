@@ -1,5 +1,6 @@
 import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
+import CityBgImg from '@/assets/img/city-bg.jpg'
 
 const Background = () => {
   const bgRef = useRef(null)
@@ -20,7 +21,10 @@ const Background = () => {
 
   return (
     <div className='background-city-container' ref={bgRef}>
-      <div className='background-city'></div>
+      <div
+        className='background-city'
+        style={{ background: `url(${CityBgImg}) repeat-x` }}
+      />
     </div>
   )
 }

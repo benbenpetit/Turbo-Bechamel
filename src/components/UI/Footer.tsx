@@ -2,6 +2,8 @@ import { useEffect, FC } from 'react'
 import ButtonOrange from './ButtonOrange'
 import ButtonViolet from './ButtonViolet'
 import ButtonSound from './ButtonSound'
+import ArrowLeftImg from '@/assets/img/arrow-l.svg'
+import ArrowRightImg from '@/assets/img/arrow-r.svg'
 
 interface Props {
   footerStart: Function
@@ -33,12 +35,12 @@ const Footer: FC<Props> = ({ footerStart, footerSound, goRight, goLeft }) => {
         }}
       />
       <ButtonOrange
-        imgSrc='src/assets/img/arrow-l.svg'
+        imgSrc={ArrowLeftImg}
         trigger={true}
         onPress={() => goLeft()}
       />
       <ButtonOrange
-        imgSrc='src/assets/img/arrow-r.svg'
+        imgSrc={ArrowRightImg}
         trigger={true}
         onPress={() => goRight()}
       />

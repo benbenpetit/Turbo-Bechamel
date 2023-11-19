@@ -1,6 +1,10 @@
+import TVImg from '@/assets/img/TV.png'
+
 const TV = () => {
   return (
-    <div className="tv"><img src="src/assets/img/TV.png" alt="" draggable='false'/></div>
+    <div className='tv'>
+      <img src={TVImg} alt='' draggable='false' />
+    </div>
   )
 }
 

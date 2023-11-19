@@ -18,6 +18,17 @@ import FeuGif from '@/assets/img/feu.gif'
 import LasagnaImg from '@/assets/img/plat-lasagne.svg'
 import { motion } from 'framer-motion'
 import LasagnesFinishImg from '@/assets/img/lasagnes-finish.svg'
+import GoofyProdSound from '@/assets/sounds/music/goofy-prod.mp3'
+import WobbleSound from '@/assets/sounds/goofy-fx/wobble.mp3'
+import QuestionSound from '@/assets/sounds/goofy-fx/question.mp3'
+import SlipSound from '@/assets/sounds/goofy-fx/slip.mp3'
+import GunSound from '@/assets/sounds/goofy-fx/gun.mp3'
+import BoingSound from '@/assets/sounds/goofy-fx/boing.mp3'
+import BavungSound from '@/assets/sounds/goofy-fx/bavung.mp3'
+import MotorSound from '@/assets/sounds/goofy-fx/motor.mp3'
+import ProdLoopSound from '@/assets/sounds/music/prod-loop.mp3'
+import LaughSound from '@/assets/sounds/goofy-fx/laugh.mp3'
+import Whistle1Sound from '@/assets/sounds/goofy-fx/whistle1.mp3'
 
 gsap.registerPlugin(ScrollToPlugin)
 
@@ -154,7 +165,7 @@ const App = () => {
       isGrabbed: false,
       correction: { x: 33, y: -17 },
       color: 'blue',
-      soundID: 'src/assets/sounds/goofy-fx/slip.mp3'
+      soundID: SlipSound
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -168,7 +179,7 @@ const App = () => {
       isGrabbed: false,
       correction: { x: 34, y: -55 },
       color: 'yellow',
-      soundID: 'src/assets/sounds/goofy-fx/gun.mp3'
+      soundID: GunSound
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -182,7 +193,7 @@ const App = () => {
       isGrabbed: false,
       correction: { x: 50, y: -20 },
       color: 'yellow',
-      soundID: 'src/assets/sounds/goofy-fx/bavung.mp3'
+      soundID: BavungSound
     },
     {
       id: Math.floor(Math.random() * 10000000000),
@@ -196,7 +207,7 @@ const App = () => {
       isGrabbed: false,
       correction: { x: 60, y: 10 },
       color: 'yellow',
-      soundID: 'src/assets/sounds/goofy-fx/boing.mp3'
+      soundID: BoingSound
     }
   ])
 
@@ -504,7 +515,7 @@ const App = () => {
 
   const handleOutLasagnes = () => {
     const fourSound = new Howl({
-      src: ['src/assets/sounds/goofy-fx/motor.mp3'],
+      src: [MotorSound],
       volume: 1
     })
 
@@ -1004,18 +1015,18 @@ const App = () => {
   const [startProgressBar, setStartProgressBar] = useState(false)
 
   const menuSound = new Howl({
-    src: ['src/assets/sounds/music/goofy-prod.mp3'],
+    src: [GoofyProdSound],
     volume: 1,
     loop: true
   })
 
   const weaponSound = new Howl({
-    src: [selectedWeapon?.soundID || 'src/assets/sounds/goofy-fx/wobble.mp3'],
+    src: [selectedWeapon?.soundID || WobbleSound],
     volume: 1
   })
 
   const ingredientSound = new Howl({
-    src: ['src/assets/sounds/goofy-fx/question.mp3'],
+    src: [QuestionSound],
     volume: 1
   })
 
@@ -1031,13 +1042,13 @@ const App = () => {
 
   const startGame = () => {
     const gameSound = new Howl({
-      src: ['src/assets/sounds/music/prod-loop.mp3'],
+      src: [ProdLoopSound],
       volume: 1,
       loop: true
     })
 
     const mamieSound = new Howl({
-      src: ['src/assets/sounds/goofy-fx/laugh.mp3']
+      src: [LaughSound]
     })
 
     setStartProgressBar(true)
@@ -1081,7 +1092,7 @@ const App = () => {
   const RightArrowPressed = () => {
     if (isGameStarted && !isRight) {
       const swipeSound = new Howl({
-        src: ['src/assets/sounds/goofy-fx/whistle1.mp3'],
+        src: [Whistle1Sound],
         volume: 1
       })
 

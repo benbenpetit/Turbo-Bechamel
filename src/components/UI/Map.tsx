@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { gsap } from 'gsap'
+import VilleImg from '@/assets/img/ville.png'
 
 const Map = () => {
   const reqAnim = useRef(0)
@@ -85,6 +86,7 @@ const Map = () => {
       <div
         className='background-map'
         style={{
+          backgroundImage: `url(${VilleImg})`,
           backgroundPositionX: `${bgPos % 3000}%`
         }}
       >

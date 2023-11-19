@@ -1,4 +1,8 @@
 import { useState, FC } from 'react'
+import ButtonVioletPressImg from '@/assets/img/button-violet-pressed.png'
+import ButtonVioletNeutralImg from '@/assets/img/button-violet-neutral.png'
+import SoundOnImg from '@/assets/img/sound-on.png'
+import SoundOffImg from '@/assets/img/sound-off.png'
 
 interface Props {
   title?: string
@@ -30,11 +34,7 @@ const ButtonSound: FC<Props> = ({ title, imgSrc, trigger, onPress }) => {
     <div className='button-orange-container'>
       <div className='button' onClick={() => handleClick()}>
         <img
-          src={
-            isPressed
-              ? 'src/assets/img/button-violet-pressed.png'
-              : 'src/assets/img/button-violet-neutral.png'
-          }
+          src={isPressed ? ButtonVioletPressImg : ButtonVioletNeutralImg}
           alt=''
         />
         <div
@@ -48,11 +48,7 @@ const ButtonSound: FC<Props> = ({ title, imgSrc, trigger, onPress }) => {
           {title && <span>{title}</span>}
           {imgSrc && (
             <img
-              src={
-                isPressed
-                  ? 'src/assets/img/sound-on.png'
-                  : 'src/assets/img/sound-off.png'
-              }
+              src={isPressed ? SoundOnImg : SoundOffImg}
               alt=''
               draggable='false'
             />
