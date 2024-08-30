@@ -1349,7 +1349,7 @@ const App = () => {
         />
         <TV />
         {isGameStarted && <Background />}
-        <Map />
+        {isGameStarted && <Map />}
         <AnimatePresence>
           {isLasagnaModal && (
             <motion.div className={'lasagna-modal'}>
