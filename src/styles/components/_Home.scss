@@ -60,6 +60,11 @@
       max-height: 100%;
       max-width: 100%;
     }
+
+    video {
+      max-height: 100%;
+      max-width: 100%;
+    }
   }
 
   .menu {
@@ -97,7 +102,7 @@
     }
 
     .text {
-      font-family: "VT323";
+      font-family: 'VT323';
       color: black;
       text-transform: uppercase;
       font-size: 1.5rem;

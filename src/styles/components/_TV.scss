@@ -9,9 +9,17 @@
   transform: scale(1.1);
   user-select: none;
 
-  img {
+  picture {
+    display: block;
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    position: relative;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 }
