@@ -1032,7 +1032,7 @@ const App = () => {
   })
 
   useEffect(() => {
-    menuSound.play()
+    // menuSound.play()
   }, [])
 
   const clickSoundButton = (isSoundActive: boolean) => {
