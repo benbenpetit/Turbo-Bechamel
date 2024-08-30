@@ -1230,98 +1230,100 @@ const App = () => {
           height: windowDimensions.height
         }}
       >
-        <div className='inside' ref={insideRef}>
-          <div className='inside-wrapper'>
-            <div
-              className='planche'
-              style={{
-                top: cuttingPlatePosition.position.y,
-                left: cuttingPlatePosition.position.x,
-                width: `${cuttingPlatePosition.size.width}px`,
-                height: 'auto'
-              }}
-              ref={cuttingPlateRef}
-            >
-              <img
-                src={PlancheImg}
-                alt='Planche'
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-                draggable={false}
-              />
-            </div>
-            {!four.isFill && (
+        {isGameStarted && (
+          <div className='inside' ref={insideRef}>
+            <div className='inside-wrapper'>
               <div
-                className='plat'
+                className='planche'
                 style={{
-                  left: lasagnaPlatePosition.position.x,
-                  top: lasagnaPlatePosition.position.y,
-                  width: `${lasagnaPlatePosition.size.width}px`,
-                  height: 'auto',
-                  transition: 'transform 0.225s cubic-bezier(0.4, 0, 0, 1)'
+                  top: cuttingPlatePosition.position.y,
+                  left: cuttingPlatePosition.position.x,
+                  width: `${cuttingPlatePosition.size.width}px`,
+                  height: 'auto'
                 }}
-                ref={lasagnaPlateRef}
-                onMouseDown={() => handleLasagnaClick()}
+                ref={cuttingPlateRef}
               >
-                <div className='couches'>
-                  {lasagnaIngredients.map((ingredient, index) =>
-                    renderCouche(ingredient, index)
-                  )}
-                </div>
                 <img
-                  src={LasagnaImg}
-                  alt='Lasagnes'
+                  src={PlancheImg}
+                  alt='Planche'
                   style={{ width: '100%', height: 'auto', display: 'block' }}
                   draggable={false}
                 />
               </div>
-            )}
-            <div
-              className='reserves'
-              style={{ position: 'absolute', zIndex: 3 }}
-            >
-              {reserves.map((item) => renderReserve(item))}
-            </div>
-            <div
-              className='ingredients'
-              style={{ position: 'absolute', zIndex: 4 }}
-            >
-              {ingredients.map((item) => renderIngredient(item))}
-            </div>
-            <div
-              className='weapons'
-              style={{ position: 'absolute', zIndex: 4 }}
-            >
-              {weapons.map((item) => renderWeapon(item))}
-            </div>
-            {isGunshotVisible && selectedWeapon && (
+              {!four.isFill && (
+                <div
+                  className='plat'
+                  style={{
+                    left: lasagnaPlatePosition.position.x,
+                    top: lasagnaPlatePosition.position.y,
+                    width: `${lasagnaPlatePosition.size.width}px`,
+                    height: 'auto',
+                    transition: 'transform 0.225s cubic-bezier(0.4, 0, 0, 1)'
+                  }}
+                  ref={lasagnaPlateRef}
+                  onMouseDown={() => handleLasagnaClick()}
+                >
+                  <div className='couches'>
+                    {lasagnaIngredients.map((ingredient, index) =>
+                      renderCouche(ingredient, index)
+                    )}
+                  </div>
+                  <img
+                    src={LasagnaImg}
+                    alt='Lasagnes'
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                    draggable={false}
+                  />
+                </div>
+              )}
               <div
-                ref={gunshotRef}
-                className='gunshot'
-                style={{ left: gunshotPosition.x, top: gunshotPosition.y }}
+                className='reserves'
+                style={{ position: 'absolute', zIndex: 3 }}
               >
-                <img
-                  src={
-                    selectedWeapon.color === 'yellow'
-                      ? GunshotYellow
-                      : GunshotBlue
-                  }
-                  alt='Coup de feu'
-                />
+                {reserves.map((item) => renderReserve(item))}
               </div>
-            )}
-            {four.isFill && (
-              <>
-                <div className='feu first'>
-                  <img src={FeuGif} alt='Feux' />
+              <div
+                className='ingredients'
+                style={{ position: 'absolute', zIndex: 4 }}
+              >
+                {ingredients.map((item) => renderIngredient(item))}
+              </div>
+              <div
+                className='weapons'
+                style={{ position: 'absolute', zIndex: 4 }}
+              >
+                {weapons.map((item) => renderWeapon(item))}
+              </div>
+              {isGunshotVisible && selectedWeapon && (
+                <div
+                  ref={gunshotRef}
+                  className='gunshot'
+                  style={{ left: gunshotPosition.x, top: gunshotPosition.y }}
+                >
+                  <img
+                    src={
+                      selectedWeapon.color === 'yellow'
+                        ? GunshotYellow
+                        : GunshotBlue
+                    }
+                    alt='Coup de feu'
+                  />
                 </div>
-                <div className='feu second'>
-                  <img src={FeuGif} alt='Feux' />
-                </div>
-              </>
-            )}
-            <img className='background' src={CuisineImg} alt='Cusine' />
+              )}
+              {four.isFill && (
+                <>
+                  <div className='feu first'>
+                    <img src={FeuGif} alt='Feux' />
+                  </div>
+                  <div className='feu second'>
+                    <img src={FeuGif} alt='Feux' />
+                  </div>
+                </>
+              )}
+              <img className='background' src={CuisineImg} alt='Cusine' />
+            </div>
           </div>
-        </div>
+        )}
         {!isGameStarted && (
           <Home
             windowWidth={windowDimensions.width}
@@ -1346,7 +1348,7 @@ const App = () => {
           }}
         />
         <TV />
-        <Background />
+        {isGameStarted && <Background />}
         <Map />
         <AnimatePresence>
           {isLasagnaModal && (
