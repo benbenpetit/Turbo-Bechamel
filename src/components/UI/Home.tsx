@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-// import HomeGif from '@/assets/img/HomePage.gif'
+import HomeGif from '@/assets/img/HomePage.gif'
 // import HomeWebm from '@/assets/img/HomePage.webm'
 import ProgressBarImg from '@/assets/img/progress-bar.svg'
 
@@ -57,7 +57,7 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
         <div className='race-line'></div>
       </div>
       <div className='logo'>
-        {/* <img src={HomeGif} alt='' draggable='false' /> */}
+        <img src={HomeGif} alt='' draggable='false' />
         {/* <video
           autoPlay
           loop

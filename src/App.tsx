@@ -18,7 +18,7 @@ import FeuGif from '@/assets/img/feu.gif'
 import LasagnaImg from '@/assets/img/plat-lasagne.svg'
 import { motion } from 'framer-motion'
 import LasagnesFinishImg from '@/assets/img/lasagnes-finish.png'
-// import GoofyProdSound from '@/assets/sounds/music/goofy-prod.mp3'
+import GoofyProdSound from '@/assets/sounds/music/goofy-prod.mp3'
 import WobbleSound from '@/assets/sounds/goofy-fx/wobble.mp3'
 import QuestionSound from '@/assets/sounds/goofy-fx/question.mp3'
 import SlipSound from '@/assets/sounds/goofy-fx/slip.mp3'
@@ -1015,11 +1015,11 @@ const App = () => {
 
   const [startProgressBar, setStartProgressBar] = useState(false)
 
-  // const menuSound = new Howl({
-  //   src: [GoofyProdSound],
-  //   volume: 1,
-  //   loop: true
-  // })
+  const menuSound = new Howl({
+    src: [GoofyProdSound],
+    volume: 1,
+    loop: true
+  })
 
   const weaponSound = new Howl({
     src: [selectedWeapon?.soundID || WobbleSound],
@@ -1032,7 +1032,7 @@ const App = () => {
   })
 
   useEffect(() => {
-    // menuSound.play()
+    menuSound.play()
   }, [])
 
   const clickSoundButton = (isSoundActive: boolean) => {
