@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import HomeGif from '@/assets/img/HomePage.gif'
-// import HomeWebm from '@/assets/img/HomePage.webm'
+// import HomeGif from '@/assets/img/HomePage.gif'
+import HomeWebm from '@/assets/img/HomePage.webm'
 import ProgressBarImg from '@/assets/img/progress-bar.svg'
 
 interface Props {
@@ -57,8 +57,8 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
         <div className='race-line'></div>
       </div>
       <div className='logo'>
-        <img src={HomeGif} alt='' draggable='false' />
-        {/* <video
+        {/* <img src={HomeGif} alt='' draggable='false' /> */}
+        <video
           autoPlay
           loop
           muted
@@ -66,7 +66,7 @@ const Home: FC<Props> = ({ windowHeight, windowWidth, startProgressBar }) => {
           preload='auto'
           src={HomeWebm}
           style={{ width: '100%', height: '100%' }}
-        /> */}
+        />
       </div>
       <div className='menu'>
         <div className='loading'>
